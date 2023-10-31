@@ -1,0 +1,17 @@
+routes:
+- name: Vul Operator Alerts
+  input: input.report.summary.criticalCount > 0 # You can customize this based on your needs
+  actions: [send-slack-msg]
+  template: vul-operator-slack
+
+# Templates are used to format a message
+templates:
+- name: vul-operator-slack
+  rego-package: hooker.vuloperator.slack
+
+# Actions are target services that should consume the messages
+actions:
+- name: send-slack-msg
+  type: slack
+  enable: true
+  url: <slack webhook url>

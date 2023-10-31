@@ -1,0 +1,74 @@
+# The configuration file contains a general settings section,
+# routes, templates and actions sections.
+
+name: tenant            #  The tenant name
+khulnasoft-server: localhost           #  URL of Khulnasoft Server for links. E.g. https://myserver.khulnasoft.com
+max-db-size: 1000MB       #  Max size of DB. <numbers><unit suffix> pattern is used, such as "300MB" or "1GB". If empty or 0 then unlimited
+db-verify-interval: 1   #  How often to check the DB size. By default, Hooker checks every 1 hour
+
+# Routes are used to define how to handle an incoming message
+routes:
+- name: stdout
+  actions: [ stdout ]
+  template: raw-json
+
+- name: actions-route
+  input: contains(input.SigMetadata.ID, "TRC-2")
+  serialize-actions: true                       # Optional. Serialize actions in route.
+  actions: [my-exec, my-exec-2, my-http-get, my-http-post-file, my-http-post-content]
+  template: raw-json
+
+# Templates are used to format a message
+templates:
+- name: raw-json                        # route message "As Is" to external webhook
+  rego-package: hooker.rawmessage.json
+
+# Outputs are target services that should consume the messages
+actions:
+- name: stdout
+  type: stdout
+  enable: true
+
+# Define a custom output of exec action, that can take params.
+- name: my-exec
+  type: exec
+  enable: true
+  env: ["MY_ENV_VAR=foo_bar_baz", "MY_KEY=secret"]     # Optional. Any environment variables to pass in
+  exec-script: |                                       # Specify the script to run
+    #!/bin/sh
+    echo $HOOKER_EVENT
+
+- name: my-exec-2
+  type: exec
+  enable: true
+  env: ["MY_ENV_VAR=foo_bar_baz", "MY_KEY=secret"]     # Optional. Any environment variables to pass in
+  input-file: /tmp/exec-test.sh                        # Specify the path to the script to run
+
+- name: my-http-get
+  type: http
+  enable: true
+  url: "https://my-fancy-url.com"     # Required. URL of the HTTP Request
+  method: GET                         # Required. Method to use. CONNECT is not supported at this time
+  headers:                            # Optional. Headers to pass in for the request
+    "Foo": ["bar", "baz"]
+  timeout: 1s                         # Optional. Timeout value in XX(s,m,h)
+
+- name: my-http-post-file
+  type: http
+  enable: true
+  url: "https://my-fancy-url.com"       # Required. URL of the HTTP Request
+  method: POST                          # Required. Method to use. CONNECT is not supported at this time
+  body-file: /tmp/some.log.file         # Optional. Body file of the HTTP request
+
+- name: my-http-post-content
+  type: http
+  enable: true
+  url: "https://my-fancy-url.com"       # Required. URL of the HTTP Request
+  method: POST                          # Required. Method to use. CONNECT is not supported at this time
+  headers:                              # Optional. Headers to pass in for the request.
+    "Foo": [ "bar" ]
+    "Haz": [ "baz" ]
+  timeout: 10s                          # Optional. Timeout value in XX(s,m,h)
+  body-content: |                       # Optional. Body inline content of the HTTP request
+    This is an example of a inline body
+    Event ID: event.input.Signature.ID

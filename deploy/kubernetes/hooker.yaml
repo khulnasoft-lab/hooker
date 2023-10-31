@@ -1,0 +1,334 @@
+## hooker-configmap
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: hooker-config
+data:
+  cfg.yaml: |
+    ---
+    # Reference: https://github.com/khulnasoft-lab/hooker/blob/main/cfg.yaml
+
+    actions:
+      - type: email
+        name: my-email
+        user: xxxxxx@gmail.com
+        host: smtp.gmail.com
+        port: 587
+        sender: xxxxxxxx@gmail.com
+        recipients:
+          - xxxxxxxxx@xxxxx.com
+        password: xxxxxxxxxx
+        enable: false
+      - type: serviceNow
+        name: my-service-now
+        enable: false
+        user: xxxxxxxxx
+        password: xxxxxxxxxx
+        instance: xxxxxxxx
+      - type: slack
+        name: my-slack
+        enable: false
+        url: >-
+          https://hooks.slack.com/services/xxxxxxx/xxxxxxx/xxxxxxx
+      - type: teams
+        name: my-teams
+        enable: false
+        url: >-
+          https://xxxxxxxx.webhook.office.com/webhookb2/xxxxxxxx/IncomingWebhook/xxxxx/xxxxx
+    routes:
+      - name: slack-route
+        input: contains(input.image, "alpine")
+        actions:
+          - my-slack
+        template: legacy-slack
+        plugins:
+          aggregate-issues-number: null
+          aggregate-issues-timeout: null
+          policy-show-all: true
+        output: []
+      - output: []
+        name: email-route
+        input: |
+          contains(input.image,"alpine")
+        actions:
+          - my-email
+        template: legacy
+      - output: []
+        name: servicenow-route
+        input: contains(input.image,"alpine")
+        actions:
+          - my-service-now
+        template: legacy
+      - output: []
+        name: msTeams-route
+        actions:
+          - my-teams
+        template: legacy
+    templates:
+      - name: slack-template
+        rego-package: hooker.vuls.slack
+      - name: rego-html
+        rego-package: hooker.vuls.html
+      - name: legacy
+        legacy-scan-renderer: html
+      - name: legacy-slack
+        legacy-scan-renderer: slack
+      - name: custom-email
+        url: null
+      - name: vul-operator-jira
+        rego-package: hooker.vuloperator.jira
+      - name: vul-operator-slack
+        rego-package: hooker.vuloperator.slack
+    name: tenant
+    KhulnasoftServer: https://xxxxxxxxxxx.com
+
+## hooker
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: hooker
+  name: hooker-svc
+spec:
+  ports:
+    - name: https
+      port: 8445
+      protocol: TCP
+      targetPort: 8445
+    - name: http
+      port: 8082
+      protocol: TCP
+      targetPort: 8082
+  selector:
+    app: hooker
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: hooker
+  name: hooker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hooker
+  serviceName: hooker-svc
+  volumeClaimTemplates:
+    - metadata:
+        name: hooker-db
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi
+    - metadata:
+        name: hooker-config
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 100Mi
+    - metadata:
+        name: rego-templates
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 100Mi
+    - metadata:
+        name: rego-filters
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 100Mi
+  template:
+    metadata:
+      labels:
+        app: hooker
+      name: hooker
+    spec:
+      initContainers:
+        - name: setting-db
+          image: busybox:1.34
+          command:
+            - /bin/chown
+            - -R
+            - "1099:1099"
+            - /server
+          volumeMounts:
+            - name: hooker-db
+              mountPath: /server/database
+            - name: rego-templates
+              mountPath: /server/rego-templates/custom
+            - name: rego-filters
+              mountPath: /server/rego-filters/custom
+        - name: setting-cfg
+          image: busybox:1.34
+          command:
+            - cp
+            - /configmap/cfg.yaml
+            - /config/cfg.yaml
+          volumeMounts:
+            - name: configmap-vol
+              mountPath: /configmap
+              readOnly: false
+            - name: hooker-config
+              mountPath: /config
+      containers:
+        - image: khulnasoft/hooker:latest
+          imagePullPolicy: Always
+          name: hooker
+          env:
+            - name: HOOKER_CFG
+              value: /config/cfg.yaml
+            - name: HOOKER_DEBUG
+              value: "not"
+          ports:
+            - name: http
+              containerPort: 8082
+              protocol: TCP
+            - name: tls
+              containerPort: 8445
+              protocol: TCP
+          volumeMounts:
+            - name: hooker-db
+              mountPath: /server/database
+            - name: hooker-config
+              mountPath: /config
+            - name: rego-templates
+              mountPath: /server/rego-templates/custom
+            - name: rego-filters
+              mountPath: /server/rego-filters/custom
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1099
+            runAsGroup: 1099
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 200m
+              memory: 128Mi
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 8082
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 8082
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      volumes:
+        - name: configmap-vol
+          configMap:
+            name: hooker-config
+            items:
+            - key: cfg.yaml
+              path: cfg.yaml
+## hooker-ui
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hooker-ui-svc
+spec:
+  ports:
+    - name: hooker-ui
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+  selector:
+    app: hooker-ui
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: hooker-ui
+  name: hooker-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hooker-ui
+  template:
+    metadata:
+      labels:
+        app: hooker-ui
+    spec:
+      initContainers:
+        - name: chmod-er
+          image: busybox:1.34
+          command:
+            - /bin/chown
+            - -R
+            - "1099:1099"
+            - /config
+          volumeMounts:
+            - name: hooker-config
+              mountPath: /config
+      containers:
+        - image: khulnasoft/hooker-ui:latest
+          imagePullPolicy: Always
+          name: hooker-ui
+          env:
+            - name: HOOKER_UI_CFG
+              value: /config/cfg.yaml
+            - name: HOOKER_UI_PORT
+              value: "8000"
+            - name: HOOKER_UI_UPDATE_URL
+              value: "http://hooker-svc:8082"
+            - name: HOOKER_ADMIN_USER
+              value: admin
+            - name: HOOKER_ADMIN_PASSWORD
+              value: admin
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+          volumeMounts:
+            - name: hooker-db
+              mountPath: /server/database
+            - name: hooker-config
+              mountPath: /config
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1099
+            runAsGroup: 1099
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 200m
+              memory: 128Mi
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      volumes:
+        - name: hooker-db
+          persistentVolumeClaim:
+            claimName: hooker-db-hooker-0
+        - name: hooker-config
+          persistentVolumeClaim:
+            claimName: hooker-config-hooker-0

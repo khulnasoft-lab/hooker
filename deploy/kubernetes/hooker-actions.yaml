@@ -1,0 +1,361 @@
+## hooker-configmap
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: hooker-config
+data:
+  cfg.yaml: |
+    ---
+    # The configuration file contains a general settings section,
+    # routes, templates and actions sections.
+
+    name: tenant            #  The tenant name
+    khulnasoft-server:            #  URL of Khulnasoft Server for links. E.g. https://myserver.khulnasoft.com
+    max-db-size: 1000       #  Max size of DB in MB. if empty then unlimited
+    db-verify-interval: 1   #  How often to check the DB size. By default, Hooker checks every 1 hour
+
+    # Routes are used to define how to handle an incoming message
+    routes:
+    - name: stdout
+      actions: [ stdout ]
+      template: raw-json
+
+    - name: actions-route
+      input: contains(input.SigMetadata.ID, "TRC-2")
+      serialize-actions: true                       # Optional. Serialize actions in route.
+      actions: [save-tracker-event-log, send-event, tag-k8s-resources, kill-vulnerable-pod]
+      template: raw-json
+
+    # Templates are used to format a message
+    templates:
+    - name: raw-json                        # route message "As Is" to external webhook
+      rego-package: hooker.rawmessage.json
+
+    # Actions are target services that should consume the messages
+    actions:
+    - name: stdout
+      type: stdout
+      enable: true
+
+    # Define a custom action of exec type, that can take params.
+    - name: save-tracker-event-log
+      type: exec
+      enable: true
+      env: ["MY_ENV_VAR=foo_bar_baz", "MY_KEY=secret"]
+      exec-script: |    # We create a persistent volume "/hooker-artifacts/" to store logs
+        #!/bin/sh
+        echo $HOOKER_EVENT >> /hooker-artifacts/tracker.event.log
+        
+    - name: send-event
+      type: http
+      enable: true
+      url: "https://url-to-webhook.com"     # Required. URL of the HTTP Request
+      method: POST                          # Required. Method to use. CONNECT is not supported at this time
+      headers:                              # Optional. Headers to pass in for the request.
+        "Foo": ["bar", "baz"]
+      timeout: 10s                          # Optional. Timeout value in XX(s,m,h)
+      body-content: |                       # Optional. Body of the HTTP request
+        This is an example of sending a Hooker Event
+        via an HTTP Action. 
+        
+        Event Details: 
+          ID: event.input.SigMetadata.ID
+          Date: event.input.SigMetadata.Hostname
+        
+    - name: create-jira-ticket
+      type: jira 
+      enable: false
+      url: https://foo-bar.atlassian.com
+      project-key: XYZ                     # Required. Specify the JIRA product key
+      user: johnwick@example.com           # Required. E.g :johndoe@gmail.com"
+      password: hunter2                    # Optional. Specify Jira user API key. Used only for Jira Cloud
+      board:  "hooker-actions"             # Optional. Specify the Jira board name to open tickets on
+      labels: ["vulnerability"]            # Optional, specify array of labels to add to Ticket, for example: ["label1", "label2"]
+      priority:  "High"                    # Optional. Specify the issues severity. Default is "High"
+      assignee:  ["devops@example.com"]    # Optional. Specify the assigned user. Default is the user that opened the ticket
+
+    - name: tag-k8s-resources
+      type: kubernetes
+      enable: true
+      kube-namespace: "default"                           # Required. Kubernetes namespace to use.
+      kube-label-selector: "statefulset.kubernetes.io/pod-name=event.input.SigMetadata.Hostname"               # Required, if specifying labels or annotations.
+      kube-actions:
+        labels:
+          category: "vulnerability"                        # Required. Label to add.
+          id: event.input.Vulnerability.ID               # Optional. It is also possible to add labels based on event inputs.
+          severity: event.input.Vulnerability.Severity
+    
+    - name: kill-vulnerable-pod
+      type: exec
+      enable: true
+      exec-script: |
+        #!/bin/sh
+        PODNAME=$(echo $HOOKER_EVENT | jq -r .SigMetadata.Hostname)    
+    
+        curl -k -X DELETE \
+        -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+        https://kubernetes/api/v1/namespaces/default/pods/$PODNAME
+        
+## hooker
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: hooker
+  name: hooker-svc
+spec:
+  ports:
+  - name: https
+    port: 8445
+    protocol: TCP
+    targetPort: 8445
+  - name: http
+    port: 8082
+    protocol: TCP
+    targetPort: 8082
+  selector:
+    app: hooker
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: hooker
+  name: hooker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hooker
+  serviceName: hooker-svc
+  volumeClaimTemplates:
+  - metadata:
+      name: hooker-db
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+  - metadata:
+      name: hooker-artifacts
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 100Mi
+  - metadata:
+      name: hooker-config
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 100Mi
+  - metadata:
+      name: rego-templates
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 100Mi
+  - metadata:
+      name: rego-filters
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 100Mi
+  template:
+    metadata:
+      labels:
+        app: hooker
+      name: hooker
+    spec:
+      initContainers:
+      - name: setting-db
+        image: busybox:1.34
+        command:
+        - /bin/chown
+        - -R
+        - "1099:1099"
+        - /server
+        volumeMounts:
+        - name: hooker-db
+          mountPath: /server/database
+        - name: rego-templates
+          mountPath: /server/rego-templates/custom
+        - name: rego-filters
+          mountPath: /server/rego-filters/custom
+      - name: setting-cfg
+        image: busybox:1.34
+        command:
+        - cp
+        - /configmap/cfg.yaml
+        - /config/cfg.yaml
+        volumeMounts:
+        - name: configmap-vol
+          mountPath: /configmap
+          readOnly: false
+        - name: hooker-config
+          mountPath: /config
+      containers:
+      - image: hooker-local:latest
+        imagePullPolicy: IfNotPresent
+        name: hooker
+        env:
+        - name: HOOKER_CFG
+          value: /config/cfg.yaml
+        - name: HOOKER_DEBUG
+          value: "not"
+        ports:
+        - name: http
+          containerPort: 8082
+          protocol: TCP
+        - name: tls
+          containerPort: 8445
+          protocol: TCP
+        volumeMounts:
+        - name: configmap-vol
+          mountPath: /configmap
+          readOnly: false
+        - name: hooker-db
+          mountPath: /server/database
+        - name: hooker-config
+          mountPath: /config
+        - name: rego-templates
+          mountPath: /server/rego-templates/custom
+        - name: rego-filters
+          mountPath: /server/rego-filters/custom
+        - name: hooker-artifacts
+          mountPath: /hooker-artifacts
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 1099
+          runAsGroup: 1099
+        resources:
+          limits:
+            cpu: 500m
+            memory: 256Mi
+          requests:
+            cpu: 200m
+            memory: 128Mi
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 8082
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: 8082
+          initialDelaySeconds: 10
+          periodSeconds: 10
+      volumes:
+      - name: configmap-vol
+        configMap:
+          name: hooker-config
+          items:
+          - key: cfg.yaml
+            path: cfg.yaml
+
+## hooker-ui
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hooker-ui-svc
+spec:
+  ports:
+  - name: hooker-ui
+    port: 8000
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: hooker-ui
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: hooker-ui
+  name: hooker-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hooker-ui
+  template:
+    metadata:
+      labels:
+        app: hooker-ui
+    spec:
+      initContainers:
+      - name: chmod-er
+        image: busybox:1.34
+        command:
+        - /bin/chown
+        - -R
+        - "1099:1099"
+        - /config
+        volumeMounts:
+        - name: hooker-config
+          mountPath: /config
+      containers:
+      - image: khulnasoft/hooker-ui:latest
+        imagePullPolicy: Always
+        name: hooker-ui
+        env:
+        - name: HOOKER_UI_CFG
+          value: /config/cfg.yaml
+        - name: HOOKER_UI_PORT
+          value: "8000"
+        - name: HOOKER_UI_UPDATE_URL
+          value: "http://hooker-svc:8082"
+        - name: HOOKER_ADMIN_USER
+          value: admin
+        - name: HOOKER_ADMIN_PASSWORD
+          value: admin
+        ports:
+        - containerPort: 8000
+          protocol: TCP
+        volumeMounts:
+        - name: hooker-db
+          mountPath: /server/database
+        - name: hooker-config
+          mountPath: /config
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 1099
+          runAsGroup: 1099
+        resources:
+          limits:
+            cpu: 500m
+            memory: 256Mi
+          requests:
+            cpu: 200m
+            memory: 128Mi
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+      volumes:
+      - name: hooker-db
+        persistentVolumeClaim:
+          claimName: hooker-db-hooker-0
+      - name: hooker-config
+        persistentVolumeClaim:
+          claimName: hooker-config-hooker-0

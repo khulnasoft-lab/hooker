@@ -1,0 +1,123 @@
+project_name: hooker
+release:
+  draft: false
+  prerelease: auto
+env:
+  - GO111MODULE=on
+  - CGO_ENABLED=0
+before:
+  hooks:
+    - make build
+builds:
+  - id: hooker
+    dir: .
+    main: ./main.go
+    binary: hooker
+    ldflags:
+      - -s -w
+      - "-extldflags '-static'"
+      - -X main.version={{.Version}}
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - arm
+      - arm64
+    goarm:
+      - 7
+    ignore:
+      - goos: darwin
+        goarch: 386      
+archives:
+  - name_template: "{{ .ProjectName }}_{{.Version}}_{{ .Os }}_{{ .Arch }}"
+    builds:
+      - hooker
+    replacements:
+      amd64: 64bit
+      arm: ARM
+      arm64: ARM64
+      darwin: macOS
+      linux: Linux
+checksum:
+  name_template: "checksums.txt"
+snapshot:
+  name_template: "{{ .FullCommit }}"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs'
+      - '^test'
+      - '^release'
+dockers:
+  - dockerfile: Dockerfile.release
+    use: buildx
+    goos: linux
+    goarch: amd64
+    image_templates:
+      - "docker.io/khulnasoft/hooker:{{ .Version }}-amd64"
+      - "public.ecr.aws/khulnasoft-lab/hooker:{{ .Version }}-amd64"
+      - "docker.io/khulnasoft/hooker:latest"
+      - "public.ecr.aws/khulnasoft-lab/hooker:latest"
+    ids:
+      - hooker
+    extra_files:
+      - rego-templates/
+      - rego-filters/
+      - cfg.yaml
+    build_flag_templates:
+      - "--label=org.opencontainers.image.title={{ .ProjectName }}"
+      - "--label=org.opencontainers.image.description=Command line interface for Hooker"
+      - "--label=org.opencontainers.image.vendor=Khulnasoft Security"
+      - "--label=org.opencontainers.image.version={{ .Version }}"
+      - "--label=org.opencontainers.image.created={{ .Date }}"
+      - "--label=org.opencontainers.image.source=https://github.com/khulnasoft-lab/hooker"
+      - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
+      - "--platform=linux/amd64"
+  - dockerfile: Dockerfile.ui
+    use: buildx
+    goos: linux
+    goarch: amd64
+    image_templates:
+      - "docker.io/khulnasoft/hooker-ui:{{ .Version }}-amd64"
+      - "public.ecr.aws/khulnasoft-lab/hooker-ui:{{ .Version }}-amd64"
+      - "docker.io/khulnasoft/hooker-ui:latest"
+      - "public.ecr.aws/khulnasoft-lab/hooker-ui:latest"
+    ids:
+      - hooker-ui
+    extra_files:
+      - rego-templates/
+      - rego-filters/
+      - cfg.yaml
+      - ui/
+    build_flag_templates:
+      - "--label=org.opencontainers.image.title={{ .ProjectName }}"
+      - "--label=org.opencontainers.image.description=Hooker UI"
+      - "--label=org.opencontainers.image.vendor=Khulnasoft Security"
+      - "--label=org.opencontainers.image.version={{ .Version }}"
+      - "--label=org.opencontainers.image.created={{ .Date }}"
+      - "--label=org.opencontainers.image.source=https://github.com/khulnasoft-lab/hooker"
+      - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
+      - "--label=org.opencontainers.image.documentation=https://khulnasoft-lab.github.io/hooker/v{{ .Version }}/"
+      - "--platform=linux/amd64"
+docker_manifests:
+  - name_template: 'khulnasoft/hooker:{{ .Version }}'
+    image_templates:
+    - 'khulnasoft/hooker:{{ .Version }}-amd64'
+  - name_template: 'public.ecr.aws/khulnasoft-lab/hooker:{{ .Version }}'
+    image_templates:
+    - 'public.ecr.aws/khulnasoft-lab/hooker:{{ .Version }}-amd64'
+  - name_template: 'khulnasoft/hooker:latest'
+    image_templates:
+    - 'khulnasoft/hooker:{{ .Version }}-amd64'
+# Hooker-UI
+  - name_template: 'khulnasoft/hooker-ui:{{ .Version }}'
+    image_templates:
+    - 'khulnasoft/hooker-ui:{{ .Version }}-amd64'
+  - name_template: 'public.ecr.aws/khulnasoft-lab/hooker-ui:{{ .Version }}'
+    image_templates:
+    - 'public.ecr.aws/khulnasoft-lab/hooker-ui:{{ .Version }}-amd64'
+  - name_template: 'khulnasoft/hooker-ui:latest'
+    image_templates:
+    - 'khulnasoft/hooker-ui:{{ .Version }}-amd64'

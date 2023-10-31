@@ -1,0 +1,13 @@
+.idea/
+bin/
+pkg/
+src/github.com/
+src/gopkg.in/
+src/go.etcd.io/
+**/*.out
+**/*.db
+coverage.txt
+dist/
+.vscode/
+
+

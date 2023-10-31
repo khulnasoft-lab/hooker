@@ -1,0 +1,61 @@
+#Create the volume for the Hooker volumeClaimTemplates
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: hooker-db
+  labels:
+    app: hooker-db
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /tmp/hooker/db/
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: hooker-config
+  labels:
+    app: hooker-config
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /tmp/hooker/config/
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: hooker-rego-templates
+  labels:
+    app: hooker-rego-templates
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /tmp/hooker/rego-templates/
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: hooker-rego-filters
+  labels:
+    app: hooker-rego-filters
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /tmp/hooker/rego-filters/

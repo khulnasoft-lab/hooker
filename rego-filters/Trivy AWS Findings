@@ -1,0 +1,5 @@
+package hooker
+
+allow {
+    contains(input.Findings[0].ProductFields["Product Name"], "Vul")
+}
