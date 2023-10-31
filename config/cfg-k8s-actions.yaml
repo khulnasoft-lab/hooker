@@ -1,0 +1,44 @@
+# The configuration file contains a general settings section,
+# routes, templates and actions sections.
+
+name: tenant            #  The tenant name
+khulnasoft-server:            #  URL of Khulnasoft Server for links. E.g. https://myserver.khulnasoft.com
+max-db-size: 1000MB       #  Max size of DB. <numbers><unit suffix> pattern is used, such as "300MB" or "1GB". If empty or 0 then unlimited
+db-verify-interval: 1   #  How often to check the DB size. By default, Hooker checks every 1 hour
+
+# Routes are used to define how to handle an incoming message
+routes:
+- name: stdout
+  actions: [ stdout ]
+  template: raw-json
+
+- name: actions-route
+  input: contains(input.SigMetadata.ID, "TRC-2")
+  actions: [my-k8s]
+  template: raw-json
+
+# Templates are used to format a message
+templates:
+- name: raw-json                                   # route message "As Is" to external webhook
+  rego-package: hooker.rawmessage.json
+
+# Outputs are target services that should consume the messages
+actions:
+- name: stdout
+  type: stdout
+  enable: true
+
+# Define a custom output of k8s action, that can take params.
+- name: my-k8s
+  type: kubernetes
+  enable: true
+  kube-namespace: "default"                         # Required. Kubernetes namespace to use.
+  kube-config-file: "/path/to/kubeconfig"           # Required if not running on K8S, Optional otherwise.
+  kube-label-selector: "app=nginx-app"              # Required, if specifying labels or annotations.
+  kube-actions:
+    labels:
+      foo-label: "bar-value"                        # Required. Label to add.
+      bar-label: event.input.SigMetadata.ID         # Optional. It is also possible to add labels based on event inputs.
+    annotations:
+      foo-annotation: "bar-value"
+      bar-annotation: event.input.SigMetadata.ID

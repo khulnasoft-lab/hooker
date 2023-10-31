@@ -1,0 +1,30 @@
+version: "3"
+services:
+    hookerwebhook:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - 8082:8082
+        volumes:
+            - bolt:/server/database
+            - config:/server
+        environment:
+            - "HOOKER_CFG=/server/cfg.yaml"
+            - "HOOKER_DEBUG=ON"
+    hookerui:
+        build:
+            context: .
+            dockerfile: Dockerfile.ui
+        ports:
+            - 8001:8001
+        volumes:
+            - bolt:/server/database
+            - config:/server
+        environment:
+            - "HOOKER_UI_CFG=/server/cfg.yaml"
+            - "HOOKER_UI_PORT=8001"
+            - "HOOKER_UI_UPDATE_URL=http://hookerwebhook:8082"
+volumes:
+  bolt:
+  config:

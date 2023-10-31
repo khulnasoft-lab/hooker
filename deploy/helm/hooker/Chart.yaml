@@ -1,0 +1,19 @@
+apiVersion: v2
+name: hooker
+description: A Helm chart for Hooker
+type: application
+
+# Versions are expected to follow Semantic Versioning (https://semver.org/)
+version: 0.5.0
+
+# This is the version number of the application being deployed. This version number should be
+# incremented each time you make changes to the application. Versions are not expected to
+# follow Semantic Versioning. They should reflect the version the application is using.
+# It is recommended to use it with quotes.
+appVersion: "2.14.0-amd64"
+
+keywords:
+  - khulnasoft-lab
+  - hooker
+sources:
+  - https://github.com/khulnasoft-lab/hooker
