@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="./docs/img/hooker.png">
-</p>
-
 ![Docker Pulls][docker-pull]
 [![Go Report Card][report-card-img]][report-card]
 ![](https://github.com/khulnasoft-lab/hooker/workflows/Go/badge.svg)
