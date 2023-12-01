@@ -14,7 +14,7 @@ RUN apk add git
 ARG TARGETOS TARGETARCH
 RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build --ldflags "-s -w" -o hookerui
 
-FROM alpine:3.18.4
+FROM alpine:3.18.5
 EXPOSE 8001
 
 RUN mkdir /uiserver
