@@ -1,4 +1,4 @@
-package postee
+package hooker
 
 
 ArrayIgnoredImageNames := {"alpine", "postgres"} #List of comma separated images that will be ignored by the integration

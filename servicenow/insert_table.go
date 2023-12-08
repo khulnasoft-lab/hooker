@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/aquasecurity/postee/v2/utils"
+	"github.com/khulnasoft-lab/hooker/v2/utils"
 )
 
 func InsertRecordToTable(user, password, instance, table string, content []byte) error {

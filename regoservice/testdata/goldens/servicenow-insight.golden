@@ -1,7 +1,7 @@
 
 <!-- Insight Details -->
 <h2> <i>Insight Details:</i> </h2>
-<p><b>Insight ID:</b> aqua-3006</p>
+<p><b>Insight ID:</b> khulnasoft-3006</p>
 <p><b>Description:</b> Workloads or images containing login data</p>
 <p><b>Impact:</b> Attackers with access to this workload or image might be able to use the login data to gain initial access to other resources</p>
 <p><b>Severity:</b> medium</p>

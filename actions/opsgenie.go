@@ -10,8 +10,8 @@ import (
 	"github.com/opsgenie/opsgenie-go-sdk-v2/alert"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 
-	"github.com/aquasecurity/postee/v2/formatting"
-	"github.com/aquasecurity/postee/v2/layout"
+	"github.com/khulnasoft-lab/hooker/v2/formatting"
+	"github.com/khulnasoft-lab/hooker/v2/layout"
 )
 
 const defaultPriority = alert.P3

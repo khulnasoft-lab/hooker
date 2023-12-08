@@ -7,8 +7,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/aquasecurity/postee/v2/dbservice"
-	"github.com/aquasecurity/postee/v2/routes"
+	"github.com/khulnasoft-lab/hooker/v2/dbservice"
+	"github.com/khulnasoft-lab/hooker/v2/routes"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -183,9 +183,9 @@ func TestGetMessageUniqueId(t *testing.T) {
 		},
 		{
 			props:    []string{"digest", "image", "registry", "vulnerability_summary.critical", "vulnerability_summary.high", "vulnerability_summary.medium", "vulnerability_summary.low"},
-			name:     "Legacy scan logic from Postee 1.0",
+			name:     "Legacy scan logic from Hooker 1.0",
 			filename: "all-in-one-image.json",
-			wantKey:  "sha256:45388de11cfbf5c5d9e2e1418dfeac221c57cfffa1e2fffa833ac283ed029ecf-all-in-one:3.5.19223-Aqua-0-7-30-6",
+			wantKey:  "sha256:45388de11cfbf5c5d9e2e1418dfeac221c57cfffa1e2fffa833ac283ed029ecf-all-in-one:3.5.19223-Khulnasoft-0-7-30-6",
 		},
         {
             props:    []string{"arr.foo"},

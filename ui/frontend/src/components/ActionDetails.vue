@@ -522,7 +522,7 @@ export default {
       errors: {}, //required for mixins
       actionType: "", //stored separately to track dependencies
       jiraAssigneeDescription:
-        'Optional: comma separated list of users (emails) that will be assigned to ticket, e.g., ["john@yahoo.com"]. To assign a ticket to the Application Owner email address (as defined in Aqua Application Scope, owner email field), specify ["<%application_scope_owner%>"] as the assignee value',
+        'Optional: comma separated list of users (emails) that will be assigned to ticket, e.g., ["john@yahoo.com"]. To assign a ticket to the Application Owner email address (as defined in Khulnasoft Application Scope, owner email field), specify ["<%application_scope_owner%>"] as the assignee value',
       selectedExecInputParam: 'script',
     };
   },

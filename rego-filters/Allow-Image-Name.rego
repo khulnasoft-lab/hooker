@@ -1,4 +1,4 @@
-package postee
+package hooker
 
 
 ArrayPermitedImageNames := {"ubuntu", "busybox"}#Comma separated list of images that will trigger the integration.

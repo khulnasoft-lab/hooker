@@ -7,8 +7,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/aquasecurity/postee/v2/layout"
-	"github.com/aquasecurity/postee/v2/router"
+	"github.com/khulnasoft-lab/hooker/v2/layout"
+	"github.com/khulnasoft-lab/hooker/v2/router"
 )
 
 func (srv *uiServer) testSettings(w http.ResponseWriter, r *http.Request) {
@@ -31,8 +31,8 @@ func (srv *uiServer) testSettings(w http.ResponseWriter, r *http.Request) {
 
 	testPayload := make(map[string]string)
 
-	testPayload["title"] = "Postee test title"
-	testPayload["description"] = layout.GenTestDescription(plg.GetLayoutProvider(), "Postee test description")
+	testPayload["title"] = "Hooker test title"
+	testPayload["description"] = layout.GenTestDescription(plg.GetLayoutProvider(), "Hooker test description")
 
 	log.Printf("description is: %s \n", testPayload["description"])
 

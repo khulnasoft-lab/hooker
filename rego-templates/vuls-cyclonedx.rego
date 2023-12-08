@@ -1,6 +1,6 @@
-package postee.vuls.cyclondx
+package hooker.vuls.cyclondx
 
-import data.postee.with_default
+import data.hooker.with_default
 
 
 bom_tpl:=`<?xml version="1.0"?>
@@ -53,10 +53,10 @@ render_vlnrb(vlnrb_lst) = xml {
         vln_name := vlnrb.name
         nvd_url := vlnrb.nvd_url
         # description is skipped
-        vln_severity := vlnrb.aqua_severity
-        vln_method := vlnrb.aqua_scoring_system
-        vln_vectors := vlnrb.aqua_vectors
-        vln_score := vlnrb.aqua_score
+        vln_severity := vlnrb.khulnasoft_severity
+        vln_method := vlnrb.khulnasoft_scoring_system
+        vln_vectors := vlnrb.khulnasoft_vectors
+        vln_score := vlnrb.khulnasoft_score
         vln_solution := with_default(vlnrb, "solution", "No solution available")
 
         r := sprintf(vlnrb_tpl, [vln_name, nvd_url, vln_score, vln_score, vln_score, vln_severity, vln_method, vln_vectors, vln_solution])

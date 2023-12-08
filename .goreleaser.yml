@@ -1,4 +1,4 @@
-project_name: postee
+project_name: hooker
 release:
   draft: false
   prerelease: auto
@@ -9,10 +9,10 @@ before:
   hooks:
     - make build
 builds:
-  - id: postee
+  - id: hooker
     dir: .
     main: ./main.go
-    binary: postee
+    binary: hooker
     ldflags:
       - -s -w
       - "-extldflags '-static'"
@@ -32,7 +32,7 @@ builds:
 archives:
   - name_template: "{{ .ProjectName }}_{{.Version}}_{{ .Os }}_{{ .Arch }}"
     builds:
-      - postee
+      - hooker
     replacements:
       amd64: 64bit
       arm: ARM
@@ -56,23 +56,23 @@ dockers:
     goos: linux
     goarch: amd64
     image_templates:
-      - "docker.io/aquasec/postee:{{ .Version }}-amd64"
-      - "public.ecr.aws/aquasecurity/postee:{{ .Version }}-amd64"
-      - "docker.io/aquasec/postee:latest"
-      - "public.ecr.aws/aquasecurity/postee:latest"
+      - "docker.io/khulnasoft/hooker:{{ .Version }}-amd64"
+      - "public.ecr.aws/khulnasoft-lab/hooker:{{ .Version }}-amd64"
+      - "docker.io/khulnasoft/hooker:latest"
+      - "public.ecr.aws/khulnasoft-lab/hooker:latest"
     ids:
-      - postee
+      - hooker
     extra_files:
       - rego-templates/
       - rego-filters/
       - cfg.yaml
     build_flag_templates:
       - "--label=org.opencontainers.image.title={{ .ProjectName }}"
-      - "--label=org.opencontainers.image.description=Command line interface for Postee"
-      - "--label=org.opencontainers.image.vendor=Aqua Security"
+      - "--label=org.opencontainers.image.description=Command line interface for Hooker"
+      - "--label=org.opencontainers.image.vendor=Khulnasoft Security"
       - "--label=org.opencontainers.image.version={{ .Version }}"
       - "--label=org.opencontainers.image.created={{ .Date }}"
-      - "--label=org.opencontainers.image.source=https://github.com/aquasecurity/postee"
+      - "--label=org.opencontainers.image.source=https://github.com/khulnasoft-lab/hooker"
       - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
       - "--platform=linux/amd64"
   - dockerfile: Dockerfile.ui
@@ -80,12 +80,12 @@ dockers:
     goos: linux
     goarch: amd64
     image_templates:
-      - "docker.io/aquasec/postee-ui:{{ .Version }}-amd64"
-      - "public.ecr.aws/aquasecurity/postee-ui:{{ .Version }}-amd64"
-      - "docker.io/aquasec/postee-ui:latest"
-      - "public.ecr.aws/aquasecurity/postee-ui:latest"
+      - "docker.io/khulnasoft/hooker-ui:{{ .Version }}-amd64"
+      - "public.ecr.aws/khulnasoft-lab/hooker-ui:{{ .Version }}-amd64"
+      - "docker.io/khulnasoft/hooker-ui:latest"
+      - "public.ecr.aws/khulnasoft-lab/hooker-ui:latest"
     ids:
-      - postee-ui
+      - hooker-ui
     extra_files:
       - rego-templates/
       - rego-filters/
@@ -93,31 +93,31 @@ dockers:
       - ui/
     build_flag_templates:
       - "--label=org.opencontainers.image.title={{ .ProjectName }}"
-      - "--label=org.opencontainers.image.description=Postee UI"
-      - "--label=org.opencontainers.image.vendor=Aqua Security"
+      - "--label=org.opencontainers.image.description=Hooker UI"
+      - "--label=org.opencontainers.image.vendor=Khulnasoft Security"
       - "--label=org.opencontainers.image.version={{ .Version }}"
       - "--label=org.opencontainers.image.created={{ .Date }}"
-      - "--label=org.opencontainers.image.source=https://github.com/aquasecurity/postee"
+      - "--label=org.opencontainers.image.source=https://github.com/khulnasoft-lab/hooker"
       - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
-      - "--label=org.opencontainers.image.documentation=https://aquasecurity.github.io/postee/v{{ .Version }}/"
+      - "--label=org.opencontainers.image.documentation=https://khulnasoft-lab.github.io/hooker/v{{ .Version }}/"
       - "--platform=linux/amd64"
 docker_manifests:
-  - name_template: 'aquasec/postee:{{ .Version }}'
+  - name_template: 'khulnasoft/hooker:{{ .Version }}'
     image_templates:
-    - 'aquasec/postee:{{ .Version }}-amd64'
-  - name_template: 'public.ecr.aws/aquasecurity/postee:{{ .Version }}'
+    - 'khulnasoft/hooker:{{ .Version }}-amd64'
+  - name_template: 'public.ecr.aws/khulnasoft-lab/hooker:{{ .Version }}'
     image_templates:
-    - 'public.ecr.aws/aquasecurity/postee:{{ .Version }}-amd64'
-  - name_template: 'aquasec/postee:latest'
+    - 'public.ecr.aws/khulnasoft-lab/hooker:{{ .Version }}-amd64'
+  - name_template: 'khulnasoft/hooker:latest'
     image_templates:
-    - 'aquasec/postee:{{ .Version }}-amd64'
-# Postee-UI
-  - name_template: 'aquasec/postee-ui:{{ .Version }}'
+    - 'khulnasoft/hooker:{{ .Version }}-amd64'
+# Hooker-UI
+  - name_template: 'khulnasoft/hooker-ui:{{ .Version }}'
     image_templates:
-    - 'aquasec/postee-ui:{{ .Version }}-amd64'
-  - name_template: 'public.ecr.aws/aquasecurity/postee-ui:{{ .Version }}'
+    - 'khulnasoft/hooker-ui:{{ .Version }}-amd64'
+  - name_template: 'public.ecr.aws/khulnasoft-lab/hooker-ui:{{ .Version }}'
     image_templates:
-    - 'public.ecr.aws/aquasecurity/postee-ui:{{ .Version }}-amd64'
-  - name_template: 'aquasec/postee-ui:latest'
+    - 'public.ecr.aws/khulnasoft-lab/hooker-ui:{{ .Version }}-amd64'
+  - name_template: 'khulnasoft/hooker-ui:latest'
     image_templates:
-    - 'aquasec/postee-ui:{{ .Version }}-amd64'
+    - 'khulnasoft/hooker-ui:{{ .Version }}-amd64'

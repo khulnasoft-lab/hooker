@@ -1,11 +1,11 @@
-#Create the volume for the Postee volumeClaimTemplates
+#Create the volume for the Hooker volumeClaimTemplates
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: postee-db
+  name: hooker-db
   labels:
-    app: postee-db
+    app: hooker-db
 spec:
   capacity:
     storage: 1Gi
@@ -13,14 +13,14 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: /tmp/postee/db/
+    path: /tmp/hooker/db/
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: postee-config
+  name: hooker-config
   labels:
-    app: postee-config
+    app: hooker-config
 spec:
   capacity:
     storage: 100Mi
@@ -28,14 +28,14 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: /tmp/postee/config/
+    path: /tmp/hooker/config/
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: postee-rego-templates
+  name: hooker-rego-templates
   labels:
-    app: postee-rego-templates
+    app: hooker-rego-templates
 spec:
   capacity:
     storage: 100Mi
@@ -43,14 +43,14 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: /tmp/postee/rego-templates/
+    path: /tmp/hooker/rego-templates/
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: postee-rego-filters
+  name: hooker-rego-filters
   labels:
-    app: postee-rego-filters
+    app: hooker-rego-filters
 spec:
   capacity:
     storage: 100Mi
@@ -58,4 +58,4 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: /tmp/postee/rego-filters/
+    path: /tmp/hooker/rego-filters/

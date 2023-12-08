@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	sessioncookiename = "postee-session-cookie"
+	sessioncookiename = "hooker-session-cookie"
 )
 
 func (srv *uiServer) login(w http.ResponseWriter, r *http.Request) {

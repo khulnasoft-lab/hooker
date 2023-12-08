@@ -37,7 +37,7 @@ func TestHTTPClient_Send(t *testing.T) {
 			method: http.MethodGet,
 			testServerFunc: func(w http.ResponseWriter, r *http.Request) {
 				assert.Equal(t, []string{"bar", "baz"}, r.Header.Values("fookey"))
-				assert.Empty(t, r.Header.Get("Postee-Event")) // no event sent
+				assert.Empty(t, r.Header.Get("Hooker-Event")) // no event sent
 			},
 		},
 		{
@@ -47,7 +47,7 @@ func TestHTTPClient_Send(t *testing.T) {
 			inputEvent: "foo bar baz header",
 			testServerFunc: func(w http.ResponseWriter, r *http.Request) {
 				assert.Equal(t, []string{"bar", "baz"}, r.Header.Values("fookey"))
-				assert.Equal(t, "Zm9vIGJhciBiYXogaGVhZGVy", r.Header.Get("Postee-Event"))
+				assert.Equal(t, "Zm9vIGJhciBiYXogaGVhZGVy", r.Header.Get("Hooker-Event"))
 
 				b, _ := ioutil.ReadAll(r.Body)
 				assert.Equal(t, "foo bar baz body", string(b))
@@ -60,7 +60,7 @@ func TestHTTPClient_Send(t *testing.T) {
 			inputEvent:  "foo bar baz header",
 			testServerFunc: func(w http.ResponseWriter, r *http.Request) {
 				assert.Equal(t, []string{"bar", "baz"}, r.Header.Values("fookey"))
-				assert.Equal(t, "Zm9vIGJhciBiYXogaGVhZGVy", r.Header.Get("Postee-Event"))
+				assert.Equal(t, "Zm9vIGJhciBiYXogaGVhZGVy", r.Header.Get("Hooker-Event"))
 
 				b, _ := ioutil.ReadAll(r.Body)
 				assert.Equal(t, "foo bar baz body", string(b))
@@ -75,7 +75,7 @@ func TestHTTPClient_Send(t *testing.T) {
 }`,
 			testServerFunc: func(w http.ResponseWriter, r *http.Request) {
 				assert.Equal(t, []string{"bar", "baz"}, r.Header.Values("fookey"))
-				assert.Equal(t, "ewoJImFyZ3NOdW0iOiAyCn0=", r.Header.Get("Postee-Event"))
+				assert.Equal(t, "ewoJImFyZ3NOdW0iOiAyCn0=", r.Header.Get("Hooker-Event"))
 
 				b, _ := ioutil.ReadAll(r.Body)
 				assert.Equal(t, "foo bar baz body", string(b))
@@ -92,7 +92,7 @@ eventID: event.input.eventID`,
 }`,
 			testServerFunc: func(w http.ResponseWriter, r *http.Request) {
 				assert.Equal(t, []string{"bar", "baz"}, r.Header.Values("fookey"))
-				assert.Equal(t, "ewoJImFyZ3NOdW0iOiAyLAoJImV2ZW50SUQiOiAiVFJDLTIiCn0=", r.Header.Get("Postee-Event"))
+				assert.Equal(t, "ewoJImFyZ3NOdW0iOiAyLAoJImV2ZW50SUQiOiAiVFJDLTIiCn0=", r.Header.Get("Hooker-Event"))
 
 				b, _ := ioutil.ReadAll(r.Body)
 				assert.Equal(t, `argsNum: 2
@@ -107,7 +107,7 @@ event1: event.input`,
 			inputEvent: `"argsNum": 2, "eventID": "TRC-2"`,
 			testServerFunc: func(w http.ResponseWriter, r *http.Request) {
 				assert.Equal(t, []string{"bar", "baz"}, r.Header.Values("fookey"))
-				assert.Equal(t, "ImFyZ3NOdW0iOiAyLCAiZXZlbnRJRCI6ICJUUkMtMiI=", r.Header.Get("Postee-Event"))
+				assert.Equal(t, "ImFyZ3NOdW0iOiAyLCAiZXZlbnRJRCI6ICJUUkMtMiI=", r.Header.Get("Hooker-Event"))
 
 				b, _ := ioutil.ReadAll(r.Body)
 				assert.Equal(t, `event1: "argsNum": 2, "eventID": "TRC-2"

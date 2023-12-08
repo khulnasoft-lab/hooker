@@ -13,14 +13,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/aquasecurity/postee/v2/actions"
-	"github.com/aquasecurity/postee/v2/data"
-	"github.com/aquasecurity/postee/v2/dbservice"
-	"github.com/aquasecurity/postee/v2/formatting"
-	"github.com/aquasecurity/postee/v2/msgservice"
-	"github.com/aquasecurity/postee/v2/regoservice"
-	"github.com/aquasecurity/postee/v2/routes"
-	"github.com/aquasecurity/postee/v2/utils"
+	"github.com/khulnasoft-lab/hooker/v2/actions"
+	"github.com/khulnasoft-lab/hooker/v2/data"
+	"github.com/khulnasoft-lab/hooker/v2/dbservice"
+	"github.com/khulnasoft-lab/hooker/v2/formatting"
+	"github.com/khulnasoft-lab/hooker/v2/msgservice"
+	"github.com/khulnasoft-lab/hooker/v2/regoservice"
+	"github.com/khulnasoft-lab/hooker/v2/routes"
+	"github.com/khulnasoft-lab/hooker/v2/utils"
 	"github.com/ghodss/yaml"
 	"github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go"
@@ -47,7 +47,7 @@ type Router struct {
 	ticker          *time.Ticker
 	stopTicker      chan struct{}
 	cfgfile         string
-	aquaServer      string
+	khulnasoftServer      string
 	actions         map[string]actions.Action
 	inputRoutes     map[string]*routes.InputRoute
 	templates       map[string]data.Inpteval
@@ -220,12 +220,12 @@ func (ctx *Router) load() error {
 		return err
 	}
 
-	if len(tenant.AquaServer) > 0 {
+	if len(tenant.KhulnasoftServer) > 0 {
 		var slash string
-		if !strings.HasSuffix(tenant.AquaServer, "/") {
+		if !strings.HasSuffix(tenant.KhulnasoftServer, "/") {
 			slash = "/"
 		}
-		ctx.aquaServer = fmt.Sprintf("%s%s#/images/", tenant.AquaServer, slash)
+		ctx.khulnasoftServer = fmt.Sprintf("%s%s#/images/", tenant.KhulnasoftServer, slash)
 	}
 
 	dbservice.DbSizeLimit = parseSize(tenant.DBMaxSize)
@@ -259,7 +259,7 @@ func (ctx *Router) load() error {
 		utils.Debug("%#v\n", anonymizeSettings(&settings))
 
 		if settings.Enable {
-			plg := BuildAndInitOtpt(&settings, ctx.aquaServer)
+			plg := BuildAndInitOtpt(&settings, ctx.khulnasoftServer)
 			if plg != nil {
 				log.Printf("Action %s is configured", settings.Name)
 				ctx.actions[settings.Name] = plg
@@ -270,7 +270,7 @@ func (ctx *Router) load() error {
 }
 
 type service interface {
-	MsgHandling(input []byte, output actions.Action, route *routes.InputRoute, inpteval data.Inpteval, aquaServer *string)
+	MsgHandling(input []byte, output actions.Action, route *routes.InputRoute, inpteval data.Inpteval, khulnasoftServer *string)
 	EvaluateRegoRule(input *routes.InputRoute, in []byte) bool
 }
 
@@ -296,7 +296,7 @@ func (ctx *Router) HandleRoute(routeName string, in []byte) {
 	// send event up to controller unconditionally, in case controller knows
 	if ctx.Mode == "runner" {
 		log.Println("Sending event upstream to controller at url: ", ctx.ControllerURL)
-		NATSEventSubject := "postee.events"
+		NATSEventSubject := "hooker.events"
 		if err := ctx.NatsConn.Publish(NATSEventSubject, in); err != nil { // TODO: What happens if controller is unavailable?
 			log.Println("Unable to send event upstream to controller at url: ", ctx.ControllerURL, "err: ", err.Error())
 		}
@@ -342,9 +342,9 @@ func (ctx *Router) HandleRoute(routeName string, in []byte) {
 		log.Printf("route %q is associated with template %q", routeName, r.Template)
 
 		if r.SerializeActions {
-			getScanService().MsgHandling(in, pl, r, tmpl, &ctx.aquaServer)
+			getScanService().MsgHandling(in, pl, r, tmpl, &ctx.khulnasoftServer)
 		} else {
-			go getScanService().MsgHandling(in, pl, r, tmpl, &ctx.aquaServer)
+			go getScanService().MsgHandling(in, pl, r, tmpl, &ctx.khulnasoftServer)
 		}
 	}
 }
@@ -354,7 +354,7 @@ func (ctx *Router) handle(in []byte) {
 		ctx.HandleRoute(routeName, in)
 	}
 }
-func BuildAndInitOtpt(settings *ActionSettings, aquaServerUrl string) actions.Action {
+func BuildAndInitOtpt(settings *ActionSettings, khulnasoftServerUrl string) actions.Action {
 	settings.User = utils.GetEnvironmentVarOrPlain(settings.User)
 	if len(settings.User) == 0 && requireAuthorization[settings.Type] {
 		log.Printf("User for %q is empty", settings.Name)
@@ -388,9 +388,9 @@ func BuildAndInitOtpt(settings *ActionSettings, aquaServerUrl string) actions.Ac
 	case "email":
 		plg = buildEmailAction(settings)
 	case "slack":
-		plg = buildSlackAction(settings, aquaServerUrl)
+		plg = buildSlackAction(settings, khulnasoftServerUrl)
 	case "teams":
-		plg = buildTeamsAction(settings, aquaServerUrl)
+		plg = buildTeamsAction(settings, khulnasoftServerUrl)
 	case "servicenow":
 		plg = buildServiceNow(settings)
 	case "webhook":

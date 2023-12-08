@@ -6,14 +6,14 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/aquasecurity/postee/v2/router"
+	"github.com/khulnasoft-lab/hooker/v2/router"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestWebServer_eventsHandler(t *testing.T) {
 	rtr := router.Instance()
-	rtr.Send([]byte(`{"SigMetadata":{"ID":"TRC-2", "hostname":"postee-0"}}`))
-	rtr.Send([]byte(`{"SigMetadata":{"ID":"TRC-3", "hostname":"postee-0"}}`))
+	rtr.Send([]byte(`{"SigMetadata":{"ID":"TRC-2", "hostname":"hooker-0"}}`))
+	rtr.Send([]byte(`{"SigMetadata":{"ID":"TRC-3", "hostname":"hooker-0"}}`))
 
 	ws := WebServer{}
 	w := httptest.NewRecorder()
@@ -30,13 +30,13 @@ func TestWebServer_eventsHandler(t *testing.T) {
    {
       "SigMetadata":{
          "ID":"TRC-2",
-         "hostname":"postee-0"
+         "hostname":"hooker-0"
       }
    },
    {
       "SigMetadata":{
          "ID":"TRC-3",
-         "hostname":"postee-0"
+         "hostname":"hooker-0"
       }
    }
 ]`, string(got))

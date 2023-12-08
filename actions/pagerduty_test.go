@@ -57,7 +57,7 @@ func TestPagerdutyClient_Send(t *testing.T) {
 			name: "happy path",
 			handlerFunc: func(writer http.ResponseWriter, request *http.Request) {
 				b, _ := io.ReadAll(request.Body)
-				assert.JSONEq(t, `{"routing_key":"123456","event_action":"trigger","payload":{"summary":"my fancy title","source":"postee","severity":"critical","timestamp":"2022-09-22T22:07:55-07:00","custom_details":"foo bar baz details"}}`, string(b))
+				assert.JSONEq(t, `{"routing_key":"123456","event_action":"trigger","payload":{"summary":"my fancy title","source":"hooker","severity":"critical","timestamp":"2022-09-22T22:07:55-07:00","custom_details":"foo bar baz details"}}`, string(b))
 				_, _ = fmt.Fprint(writer, `{"status": "ok", "dedup_key": "yes", "message": "ok"}`)
 			},
 			pagerdutyClient: PagerdutyClient{

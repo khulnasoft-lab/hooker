@@ -3,7 +3,7 @@ package formatting
 import (
 	"testing"
 
-	"github.com/aquasecurity/postee/v2/layout"
+	"github.com/khulnasoft-lab/hooker/v2/layout"
 )
 
 type tagsTest struct {

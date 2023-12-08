@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/aquasecurity/postee/v2/data"
-	"github.com/aquasecurity/postee/v2/formatting"
-	"github.com/aquasecurity/postee/v2/layout"
+	"github.com/khulnasoft-lab/hooker/v2/data"
+	"github.com/khulnasoft-lab/hooker/v2/formatting"
+	"github.com/khulnasoft-lab/hooker/v2/layout"
 )
 
 var (
@@ -64,7 +64,7 @@ var (
 				ResourceDetails: data.ResourceDetails{Name: "", Version: ""},
 			},
 		},
-		ApplicationScopeOwners: []string{"recipient1@aquasec.com", "recipient1@aquasec.com"},
+		ApplicationScopeOwners: []string{"recipient1@khulnasoft.com", "recipient1@khulnasoft.com"},
 	}
 )
 
@@ -133,7 +133,7 @@ func Equal(A, B *data.ScanImageInfo) bool {
 func BenchmarkGenTicketDescription(b *testing.B) {
 	provider := new(formatting.JiraLayoutProvider)
 	for i := 0; i < b.N; i++ {
-		layout.GenTicketDescription(provider, &AlpineImageResult, nil, "https://demolab.aquasec.com/", "")
+		layout.GenTicketDescription(provider, &AlpineImageResult, nil, "https://demolab.khulnasoft.com/", "")
 	}
 }
 
@@ -153,7 +153,7 @@ func TestGenTicketDescription(t *testing.T) {
 
 	for _, provider := range providers {
 		for _, test := range tests {
-			got := layout.GenTicketDescription(provider, test.currentScan, test.previousScan, "https://demolab.aquasec.com", "")
+			got := layout.GenTicketDescription(provider, test.currentScan, test.previousScan, "https://demolab.khulnasoft.com", "")
 			important := getImportantData(test.currentScan)
 			for k, v := range important {
 				if !strings.Contains(got, k) {
@@ -171,8 +171,8 @@ func TestGenTicketDescriptionFieldSeeMore(t *testing.T) {
 		image_url_part string
 		expectedSuffix string
 	}{
-		{"serverUrl is fill", "https://demolab.aquasec.com/", "alpine:3.9.6",
-			"|CVE-2019-5747|busybox|1.28.4-r3|none|\n\nSee more: [https://demolab.aquasec.com/alpine:3.9.6|https://demolab.aquasec.com/alpine:3.9.6]\n"},
+		{"serverUrl is fill", "https://demolab.khulnasoft.com/", "alpine:3.9.6",
+			"|CVE-2019-5747|busybox|1.28.4-r3|none|\n\nSee more: [https://demolab.khulnasoft.com/alpine:3.9.6|https://demolab.khulnasoft.com/alpine:3.9.6]\n"},
 		{"serverUrl is empty", "", "alpine:3.9.6",
 			"|CVE-2019-5747|busybox|1.28.4-r3|none|\n\n"},
 	}

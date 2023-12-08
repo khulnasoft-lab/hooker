@@ -1,17 +1,17 @@
-# Postee Actions
+# Hooker Actions
 
 ## Motivation
-Proper alert management can help security practitioners make informed decisions about their codebase. However, security alerts can cause fatigue if acting on them isn’t possible. Postee, an open source security alert management tool, helps mitigate some of those concerns. It enables teams to define routes and rules by which alerts are handled and redirected to 
+Proper alert management can help security practitioners make informed decisions about their codebase. However, security alerts can cause fatigue if acting on them isn’t possible. Hooker, an open source security alert management tool, helps mitigate some of those concerns. It enables teams to define routes and rules by which alerts are handled and redirected to 
 
 ## User Stories
-In a typical Postee setup, users can configure the tool to receive events from a variety of sources over a webhook. This allows for ease of use in existing environments. Furthermore, users can configure Postee to process these incoming events and, based on logic defined via Rego rules, send them to different actions.
+In a typical Hooker setup, users can configure the tool to receive events from a variety of sources over a webhook. This allows for ease of use in existing environments. Furthermore, users can configure Hooker to process these incoming events and, based on logic defined via Rego rules, send them to different actions.
 
-As a, **Postee User**
-- _I want_, to be able to remove a vulnerable image from my cluster upon a Trivy scan  
+As a, **Hooker User**
+- _I want_, to be able to remove a vulnerable image from my cluster upon a Tunnel scan  
 _So that_, I can keep such images unavailable for deployment.
 
 
-- _I want_, to ship Tracee security notification logs from my node when events are detected   
+- _I want_, to ship Tracker security notification logs from my node when events are detected   
 _So that_, I can build a timelog for forensics purposes.
 
 
@@ -19,10 +19,10 @@ _So that_, I can build a timelog for forensics purposes.
 _So that_, I can effectively tag my resources.
 
 
-## Configuring Postee Actions
-In this README, we’ll walk through a scenario in which a user wants to act on a security event received from Tracee, an open source runtime security tool. In this scenario, the user will set up the Postee Exec Action to save logs for forensic purposes and then use the Postee HTTP Action to ship the saved logs to a remote server.
+## Configuring Hooker Actions
+In this README, we’ll walk through a scenario in which a user wants to act on a security event received from Tracker, an open source runtime security tool. In this scenario, the user will set up the Hooker Exec Action to save logs for forensic purposes and then use the Hooker HTTP Action to ship the saved logs to a remote server.
 
-In this case, the incoming security event from Tracee is received by Postee and evaluated by the following route YAML definition: 
+In this case, the incoming security event from Tracker is received by Hooker and evaluated by the following route YAML definition: 
 
 ![img.png](../img/img.png)
 
@@ -40,17 +40,17 @@ The Exec Action can take in the following parameters:
 | input-file  | Required, custom shell script to executed                                                 |
 | exec-script | Required, inline shell script executed                                                    |
 
-The Exec Action also internally exposes the `$POSTEE_EVENT` environment variable with the input event that triggered the action. This can be helpful in situations where the event itself contains useful information.
+The Exec Action also internally exposes the `$HOOKER_EVENT` environment variable with the input event that triggered the action. This can be helpful in situations where the event itself contains useful information.
 
-Below is an example of using `$POSTEE_EVENT`. It uses the inline exec-script script:
+Below is an example of using `$HOOKER_EVENT`. It uses the inline exec-script script:
 
 ![img_3.png](../img/img_3.png)
 
-As you can see, we capture the incoming Postee event and write this event to the Tracee event log for forensic purposes.
+As you can see, we capture the incoming Hooker event and write this event to the Tracker event log for forensic purposes.
 
 ## HTTP Action
 
-Finally, we can configure the Postee HTTP Post Action to ship the captured event logs via our HTTP Action to our remote server.
+Finally, we can configure the Hooker HTTP Post Action to ship the captured event logs via our HTTP Action to our remote server.
 
  ![img_1.png](../img/img_1.png)
 
@@ -62,15 +62,15 @@ Finally, we can configure the Postee HTTP Post Action to ship the captured event
 | Timeout  | Optional, custom timeout for HTTP call  |
 | Bodyfile | Optional, input file for HTTP post body |
 
-To run Postee in the container, we can invoke the Postee Docker container:
+To run Hooker in the container, we can invoke the Hooker Docker container:
 
 ```
-docker run --rm --name=postee \
+docker run --rm --name=hooker \
 -v <path-to-cfg>:/config/cfg-actions.yaml  \
--e POSTEE_CFG=/config/cfg-actions.yaml \
--e POSTEE_HTTP=0.0.0.0:8084  \
--e POSTEE_HTTPS=0.0.0.0:8444  \
--p 8084:8084 -p 8444:8444 aquasecurity/postee:latest
+-e HOOKER_CFG=/config/cfg-actions.yaml \
+-e HOOKER_HTTP=0.0.0.0:8084  \
+-e HOOKER_HTTPS=0.0.0.0:8444  \
+-p 8084:8084 -p 8444:8444 khulnasoft-lab/hooker:latest
 ```
 
 ## Kubernetes Action
@@ -97,15 +97,15 @@ We have also added a Docker Action, that can help you run docker images as an ac
 | docker-cmd           | Required. Command to run inside the docker image.                                                                                                                        |
 | docker-env           | Optional. Environment variables to set in the container.                                                                                                                 |
 | docker-network       | Optional. Connect the action container to the specified network. {e.g. "host"}                                                                                           |
-| docker-volume-mounts | Optional*. Volume mounts present inside the container.<br/> * _If you have specified volume mounts, you also need to pass them through into the postee docker container_ |
+| docker-volume-mounts | Optional*. Volume mounts present inside the container.<br/> * _If you have specified volume mounts, you also need to pass them through into the hooker docker container_ |
 
 ### Note
-When running Postee in a Docker container, it is required to mount the Docker socket within the Postee container to be able to spin up Docker Action container instances. This can be done as follows:
+When running Hooker in a Docker container, it is required to mount the Docker socket within the Hooker container to be able to spin up Docker Action container instances. This can be done as follows:
 ```
-docker run --rm --name=postee --group-add $(stat -c '%g' /var/run/docker.sock) -v /var/run/docker.sock:/var/run/docker.sock -v /path/to/cfg.yaml:/config/cfg.yaml  -e POSTEE_CFG=/config/cfg.yaml -e POSTEE_HTTP=0.0.0.0:8084     -e POSTEE_HTTPS=0.0.0.0:8444     -p 8084:8084 -p 8444:8444 aquasecurity/postee:latest
+docker run --rm --name=hooker --group-add $(stat -c '%g' /var/run/docker.sock) -v /var/run/docker.sock:/var/run/docker.sock -v /path/to/cfg.yaml:/config/cfg.yaml  -e HOOKER_CFG=/config/cfg.yaml -e HOOKER_HTTP=0.0.0.0:8084     -e HOOKER_HTTPS=0.0.0.0:8444     -p 8084:8084 -p 8444:8444 khulnasoft-lab/hooker:latest
 ```
 
-If you have specified volume mounts for a docker container and use Postee in a docker container as well, remember to mount them within the Postee container as well:
+If you have specified volume mounts for a docker container and use Hooker in a docker container as well, remember to mount them within the Hooker container as well:
 ```
-docker run --rm --name=postee --group-add $(stat -c '%g' /var/run/docker.sock) -v /var/run/docker.sock:/var/run/docker.sock -v /path/to/cfg.yaml:/config/cfg.yaml  -v /my/custom/volume:/my/custom/volume -e POSTEE_CFG=/config/cfg.yaml -e POSTEE_HTTP=0.0.0.0:8084     -e POSTEE_HTTPS=0.0.0.0:8444     -p 8084:8084 -p 8444:8444 aquasecurity/postee:latest
+docker run --rm --name=hooker --group-add $(stat -c '%g' /var/run/docker.sock) -v /var/run/docker.sock:/var/run/docker.sock -v /path/to/cfg.yaml:/config/cfg.yaml  -v /my/custom/volume:/my/custom/volume -e HOOKER_CFG=/config/cfg.yaml -e HOOKER_HTTP=0.0.0.0:8084     -e HOOKER_HTTPS=0.0.0.0:8444     -p 8084:8084 -p 8444:8444 khulnasoft-lab/hooker:latest
 ```

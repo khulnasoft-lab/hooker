@@ -1,6 +1,6 @@
-package postee.vuls.html.aggregation
+package hooker.vuls.html.aggregation
 
-import data.postee.flat_array
+import data.hooker.flat_array
 
 
 title := "Vulnerability scan report"

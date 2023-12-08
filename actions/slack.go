@@ -7,11 +7,11 @@ import (
 	"log"
 	"strings"
 
-	"github.com/aquasecurity/postee/v2/data"
-	"github.com/aquasecurity/postee/v2/formatting"
-	"github.com/aquasecurity/postee/v2/layout"
+	"github.com/khulnasoft-lab/hooker/v2/data"
+	"github.com/khulnasoft-lab/hooker/v2/formatting"
+	"github.com/khulnasoft-lab/hooker/v2/layout"
 
-	slackAPI "github.com/aquasecurity/postee/v2/slack"
+	slackAPI "github.com/khulnasoft-lab/hooker/v2/slack"
 )
 
 const (
@@ -20,7 +20,7 @@ const (
 
 type SlackAction struct {
 	Name        string
-	AquaServer  string
+	KhulnasoftServer  string
 	Url         string
 	slackLayout layout.LayoutProvider
 }
@@ -82,7 +82,7 @@ func (slack *SlackAction) Send(input map[string]string) error {
 	length := len(rawBlock)
 
 	if length >= slackBlockLimit {
-		message := buildShortMessage(slack.AquaServer, input["url"], slack.slackLayout)
+		message := buildShortMessage(slack.KhulnasoftServer, input["url"], slack.slackLayout)
 		if err := slackAPI.SendToUrl(slack.Url, buildSlackBlock(title, []byte(message))); err != nil {
 			return err
 		}

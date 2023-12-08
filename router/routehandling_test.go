@@ -19,7 +19,7 @@ routes:
 templates:
 - name: raw
   body: |
-   package postee
+   package hooker
    result:=input
 
 actions:
@@ -39,7 +39,7 @@ routes:
 templates:
 - name: raw
   body: |
-   package postee
+   package hooker
    result:=input
 
 actions:
@@ -66,7 +66,7 @@ routes:
 templates:
 - name: raw
   body: |
-   package postee
+   package hooker
    result:=input
 
 actions:
@@ -88,7 +88,7 @@ routes:
 templates:
 - name: raw
   body: |
-   package postee
+   package hooker
    result:=input
 
 actions:
@@ -113,7 +113,7 @@ routes:
 templates:
 - name: raw
   body: |
-   package postee
+   package hooker
    result:=input`
 	noTemplates string = `
 Name: tenant
@@ -147,7 +147,7 @@ routes:
 templates:
 - name: raw
   body: |
-   package postee
+   package hooker
    result:=input
 
 actions:
@@ -168,7 +168,7 @@ routes:
 templates:
 - name: raw
   body: |
-   package postee
+   package hooker
    result:=input
 
 actions:
@@ -189,7 +189,7 @@ routes:
 templates:
 - name: raw
   body: |
-   package postee
+   package hooker
    result:=input
 
 actions:

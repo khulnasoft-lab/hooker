@@ -1,9 +1,9 @@
-package postee.servicenow.insight
+package hooker.servicenow.insight
 
 import future.keywords
 import future.keywords.if
-import data.postee.by_flag
-import data.postee.with_default
+import data.hooker.by_flag
+import data.hooker.with_default
 
 ################################################ Templates ################################################
 #main template to render message
@@ -170,15 +170,15 @@ sensitive_data_list = vlnrb {
 }
 
 ###########################################################################################################
-postee := with_default(input, "postee", {})
-aqua_server := with_default(postee, "AquaServer", "")
-server_url := trim_suffix(aqua_server, "/#/images/")
+hooker := with_default(input, "hooker", {})
+khulnasoft_server := with_default(hooker, "KhulnasoftServer", "")
+server_url := trim_suffix(khulnasoft_server, "/#/images/")
 
 title = input.insight.description
 href := sprintf("%s/ah/#/%s/%s/%s/%s", [server_url, "insights", urlquery.encode(input.insight.id), "resource", urlquery.encode(input.resource.id)])
 text :=  sprintf("%s/ah/#/%s/%s/%s/%s", [server_url, "insights", input.insight.id, "resource", input.resource.id])
 
-aggregation_pkg := "postee.vuls.html.aggregation"
+aggregation_pkg := "hooker.vuls.html.aggregation"
 
 priority_as_text = "critical" if {
     input.insight.priority == 4

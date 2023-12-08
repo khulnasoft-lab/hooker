@@ -7,9 +7,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/aquasecurity/postee/v2/controller"
-	"github.com/aquasecurity/postee/v2/router"
-	"github.com/aquasecurity/postee/v2/runner"
+	"github.com/khulnasoft-lab/hooker/v2/controller"
+	"github.com/khulnasoft-lab/hooker/v2/router"
+	"github.com/khulnasoft-lab/hooker/v2/runner"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -29,7 +29,7 @@ actions:
   enable: true
   exec-script: |
     #!/bin/sh
-    PID=$(echo $POSTEE_EVENT | jq -r .Context.hostName)
+    PID=$(echo $HOOKER_EVENT | jq -r .Context.hostName)
     kubectl delete pod $PID     # If terminating a K8s pod
     # pkill -SIGTERM $PID       # If terminating a UNIX process
 `

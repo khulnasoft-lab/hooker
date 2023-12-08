@@ -1,24 +1,24 @@
 # Controller Runner Mode
 
 ## Introduction
-Postee can also be run in Controller/Runner mode. The idea is to decouple enforcement from execution, if applicable.
+Hooker can also be run in Controller/Runner mode. The idea is to decouple enforcement from execution, if applicable.
 
 ## Scenario
-In the following scenario, consider two services: A and B. In the case of Service A, a Trivy scan is run and results of the scan result are sent to Postee for executing Actions upon.
+In the following scenario, consider two services: A and B. In the case of Service A, a Tunnel scan is run and results of the scan result are sent to Hooker for executing Actions upon.
 
-In the case of Service B, a Tracee container is constantly monitoring for malicious activity that happens on the host. When a Tracee finding is observed, it is sent to a local Postee Runner. This Postee Runner has the ability to locally execute a pre-defined Postee Action.
+In the case of Service B, a Tracker container is constantly monitoring for malicious activity that happens on the host. When a Tracker finding is observed, it is sent to a local Hooker Runner. This Hooker Runner has the ability to locally execute a pre-defined Hooker Action.
 
 ![img.png](img/controller-runner.png)
 
 ## Configuration
-### Run Postee in Controller mode:
+### Run Hooker in Controller mode:
 ```shell
-postee --cfgfile=./cfg-controller-runner.yaml --controller-mode --controller-ca-root="./rootCA.pem" --controller-tls-cert="./server-cert.pem" --controller-tls-key="./server-key.pem" --controller-seed-file="./seed.txt"
+hooker --cfgfile=./cfg-controller-runner.yaml --controller-mode --controller-ca-root="./rootCA.pem" --controller-tls-cert="./server-cert.pem" --controller-tls-key="./server-key.pem" --controller-seed-file="./seed.txt"
 ```
 
 | Option               | Required                     | Description                            |
 |----------------------|------------------------------|----------------------------------------|
-| controller-mode      | true                         | Enable Postee to run as a Controller   |
+| controller-mode      | true                         | Enable Hooker to run as a Controller   |
 | controller-ca-root   | false                        | TLS CA Root Certificate for Controller |
 | controller-tls-cert  | false                        | TLS Certificate for Controller         |
 | controller-tls-key   | false | TLS Key for Controller                 |
@@ -26,7 +26,7 @@ postee --cfgfile=./cfg-controller-runner.yaml --controller-mode --controller-ca-
 
 ??? note "Example Controller/Runner Configuration"
     ```yaml
-    name: Postee Controller Runner Demo
+    name: Hooker Controller Runner Demo
 
     routes:
     - name: controller-only-route
@@ -47,7 +47,7 @@ postee --cfgfile=./cfg-controller-runner.yaml --controller-mode --controller-ca-
 
     templates:
     - name: raw-json
-      rego-package: postee.rawmessage.json
+      rego-package: hooker.rawmessage.json
 
     actions:
     - name: stdout
@@ -67,17 +67,17 @@ postee --cfgfile=./cfg-controller-runner.yaml --controller-mode --controller-ca-
         Input Image: event.input.image
 
     - name: my-exec-from-runner
-      runs-on: "postee-runner-1"
+      runs-on: "hooker-runner-1"
       type: exec
       enable: true
       env: ["MY_ENV_VAR=foo_bar_baz", "MY_KEY=secret"]
       exec-script: |
         #!/bin/sh
-        echo $POSTEE_EVENT
-        echo "this is hello from postee"
+        echo $HOOKER_EVENT
+        echo "this is hello from hooker"
 
     - name: my-http-post-from-runner
-      runs-on: "postee-runner-1"
+      runs-on: "hooker-runner-1"
       type: http
       enable: true
       url: "https://webhook.site/<uuid>"
@@ -90,25 +90,25 @@ postee --cfgfile=./cfg-controller-runner.yaml --controller-mode --controller-ca-
 The only notable change in the configuration as defined is of the Actions that can run on Runners. Observe the `runs-on` clause below.
 ```yaml
 - name: my-exec-from-runner
-  runs-on: "postee-runner-1"
+  runs-on: "hooker-runner-1"
   type: exec
   enable: true
   exec-script: |
     #!/bin/sh
-    echo $POSTEE_EVENT
-    echo "this is hello from postee"
+    echo $HOOKER_EVENT
+    echo "this is hello from hooker"
 ```
 
-In this case this particular Action will run on Postee Runner that identifies itself as `postee-runner-1`
+In this case this particular Action will run on Hooker Runner that identifies itself as `hooker-runner-1`
 
-### Run Postee in Runner mode:
+### Run Hooker in Runner mode:
 ```shell
-postee --controller-url="nats://0.0.0.0:4222" --runner-ca-cert="./rootCA.pem" --runner-tls-cert="./runner-cert.pem" --runner-tls-key="./runner-key.pem" --runner-seed-file="./seed.txt", --runner-name="postee-runner-1"  --url=0.0.0.0:9082 --tls=0.0.0.0:9445
+hooker --controller-url="nats://0.0.0.0:4222" --runner-ca-cert="./rootCA.pem" --runner-tls-cert="./runner-cert.pem" --runner-tls-key="./runner-key.pem" --runner-seed-file="./seed.txt", --runner-name="hooker-runner-1"  --url=0.0.0.0:9082 --tls=0.0.0.0:9445
 ```
 
 | Option           | Required                 | Description                                              |
 |------------------|--------------------------|----------------------------------------------------------|
-| controller-url   | true                     | The URL to the Postee Controller                         |
+| controller-url   | true                     | The URL to the Hooker Controller                         |
 | runner-name      | true                     | The Name of the Runner, as defined in configuration YAML |
 | runner-ca-root   | false                    | TLS Root CA Certificate for Runner                       |
 | runner-tls-cert  | false                    | TLS Certificate for Runner                               |
@@ -121,23 +121,23 @@ The communication channel between Controller and Runner can be optionally secure
 
 TLS can be enabled by passing the TLS cert and key through the optional `--controller-tls-cert` and `--controller-tls-key` flags for Controller and `--runner-tls-cert` and `--runner-tls-key` flags for Runner.
 
-AuthN can be enabled by passing the [NATS Seed File](https://docs.nats.io/running-a-nats-service/configuration/securing_nats/auth_intro/nkey_auth). Postee uses NKeys, a public-key signature system based on Ed25519. 
+AuthN can be enabled by passing the [NATS Seed File](https://docs.nats.io/running-a-nats-service/configuration/securing_nats/auth_intro/nkey_auth). Hooker uses NKeys, a public-key signature system based on Ed25519. 
 
 A seed file should be treated as a secret. It can be passed to the Controller via the `--controller-seed-file` and the Runner via `--runner-seed-file`.
 
-This can be helpful in situations where Postee Config contains secrets that are configured in an Action that runs on a Runner. 
+This can be helpful in situations where Hooker Config contains secrets that are configured in an Action that runs on a Runner. 
 
 ## Walkthrough
-In the case of Tracee reporting a malicious finding, the Action might only make sense to run locally within the same environment where Tracee reported from. For instance, in the case of a Postee Action to kill a process reported within the malicious finding, the process will only exist on the host where Tracee reported from. Therefore, the need for a localized Postee that can handle this arises.
+In the case of Tracker reporting a malicious finding, the Action might only make sense to run locally within the same environment where Tracker reported from. For instance, in the case of a Hooker Action to kill a process reported within the malicious finding, the process will only exist on the host where Tracker reported from. Therefore, the need for a localized Hooker that can handle this arises.
 
-Postee Runners can automatically bootstrap themselves upon startup, given the address of the Postee Controller. They only receive the relevant config info from the Postee Controller for the Actions and Routes they are responsible for. This helps by limiting the spread of secrets in your configuration to only those Runners where they are needed. If your deployment uses Actions where secrets are required, we recommend you run these Actions at the Controller level.
+Hooker Runners can automatically bootstrap themselves upon startup, given the address of the Hooker Controller. They only receive the relevant config info from the Hooker Controller for the Actions and Routes they are responsible for. This helps by limiting the spread of secrets in your configuration to only those Runners where they are needed. If your deployment uses Actions where secrets are required, we recommend you run these Actions at the Controller level.
 
-The only Actions that a Postee Runner should run are Actions that are context/environment specific. A few examples (but not limited to) are: Killing a local process, Shipping local logs on host to a remote endpoint, etc.
+The only Actions that a Hooker Runner should run are Actions that are context/environment specific. A few examples (but not limited to) are: Killing a local process, Shipping local logs on host to a remote endpoint, etc.
 
 ## Additional Info
-Postee Runners and Controllers are no different from a normal instance of vanilla Postee. Therefore, no changes to the producers are required to use this functionality.
+Hooker Runners and Controllers are no different from a normal instance of vanilla Hooker. Therefore, no changes to the producers are required to use this functionality.
 
-All events received by Postee Runners are reported upstream to the Controller. This has two benefits:
+All events received by Hooker Runners are reported upstream to the Controller. This has two benefits:
 
 1. Executions and Events received by the Runners can be monitored at a central level (Controller).
 2. Mixing of Runner and Controller Actions within a single Route, for ease of usage.

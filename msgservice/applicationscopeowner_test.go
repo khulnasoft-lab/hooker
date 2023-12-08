@@ -6,8 +6,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/aquasecurity/postee/v2/dbservice"
-	"github.com/aquasecurity/postee/v2/routes"
+	"github.com/khulnasoft-lab/hooker/v2/dbservice"
+	"github.com/khulnasoft-lab/hooker/v2/routes"
 )
 
 var (
@@ -16,7 +16,7 @@ var (
 		"registry":"registry1",
 		"vulnerability_summary":{"critical":0,"high":1,"medium":3,"low":4,"negligible":5},
 		"image_assurance_results":{"disallowed":true},
-		"application_scope_owners": ["recipient1@aquasec.com", "recipient1@aquasec.com"]
+		"application_scope_owners": ["recipient1@khulnasoft.com", "recipient1@khulnasoft.com"]
 	}`
 )
 
@@ -60,7 +60,7 @@ func TestApplicationScopeOwner(t *testing.T) {
 	}
 	owners := strings.Split(ownersStr, ";")
 	for _, own := range owners {
-		if own != "recipient1@aquasec.com" && own != "recipient2@aquasec.com" {
+		if own != "recipient1@khulnasoft.com" && own != "recipient2@khulnasoft.com" {
 			t.Errorf("Unexpected owner value: '%s'", own)
 		}
 	}

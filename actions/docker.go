@@ -10,7 +10,7 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/aquasecurity/postee/v2/layout"
+	"github.com/khulnasoft-lab/hooker/v2/layout"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
@@ -67,9 +67,9 @@ func (d DockerClient) Send(m map[string]string) error {
 		hc.NetworkMode = container.NetworkMode(d.Network)
 	}
 
-	env := append(d.Env, fmt.Sprintf(`POSTEE_EVENT="%s"`, m["description"]))
+	env := append(d.Env, fmt.Sprintf(`HOOKER_EVENT="%s"`, m["description"]))
 
-	ctrName := fmt.Sprintf("postee-%s-%s", d.GetName(), d.uuidNew())
+	ctrName := fmt.Sprintf("hooker-%s-%s", d.GetName(), d.uuidNew())
 	_, err = d.client.ContainerCreate(ctx, &container.Config{
 		Image: d.ImageName,
 		Cmd:   parsedCmd,

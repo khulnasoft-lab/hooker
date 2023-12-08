@@ -2,7 +2,7 @@ package dbservice
 
 import (
 	"bytes"
-	"github.com/aquasecurity/postee/v2/utils"
+	"github.com/khulnasoft-lab/hooker/v2/utils"
 	"log"
 	"time"
 

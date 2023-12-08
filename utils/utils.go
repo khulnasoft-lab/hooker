@@ -21,10 +21,10 @@ func GetEnvironmentVarOrPlain(value string) string {
 }
 
 func InitDebug() {
-	if os.Getenv("AQUAALERT_DEBUG") != "" {
+	if os.Getenv("KHULNASOFTALERT_DEBUG") != "" {
 		dbg = true
 	}
-	if os.Getenv("POSTEE_DEBUG") != "" {
+	if os.Getenv("HOOKER_DEBUG") != "" {
 		dbg = true
 	}
 }

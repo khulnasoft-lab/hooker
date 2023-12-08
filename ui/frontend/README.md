@@ -1,4 +1,4 @@
-# postee-ui
+# hooker-ui
 
 ## Project setup
 ```

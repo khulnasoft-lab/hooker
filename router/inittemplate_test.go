@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	regoRule = "package postee.slack"
+	regoRule = "package hooker.slack"
 )
 
 func TestInitTemplate(t *testing.T) {
@@ -59,7 +59,7 @@ func TestInitTemplate(t *testing.T) {
 		{
 			template: &Template{
 				Name:        "built-in",
-				RegoPackage: "postee.slack",
+				RegoPackage: "hooker.slack",
 			},
 			caseDesc:    "Built-in rego package",
 			expectedCls: "*regoservice.regoEvaluator",
@@ -93,7 +93,7 @@ func TestInitTemplate(t *testing.T) {
 		{
 			template: &Template{
 				Name: "inline",
-				Body: "package postee.inline",
+				Body: "package hooker.inline",
 			},
 			caseDesc:    "Loading rego from yaml config",
 			expectedCls: "*regoservice.regoEvaluator",

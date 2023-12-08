@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"strings"
 
-	"github.com/aquasecurity/postee/v2/data"
+	"github.com/khulnasoft-lab/hooker/v2/data"
 )
 
 const empty = "none"

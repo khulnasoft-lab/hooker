@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/aquasecurity/postee/v2/actions"
-	"github.com/aquasecurity/postee/v2/routes"
+	"github.com/khulnasoft-lab/hooker/v2/actions"
+	"github.com/khulnasoft-lab/hooker/v2/routes"
 	"github.com/stretchr/testify/assert"
 )
 

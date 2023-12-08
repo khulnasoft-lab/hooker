@@ -1,0 +1,28 @@
+name: Khulnasoft Cloud
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '15 21 * * 2'
+
+jobs:
+  build:
+    name: Vulnerability Scan
+    runs-on: "ubuntu-20.04"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Tunnel vulnerability scanner against Khulnasoft Cloud
+        uses: aquasecurity/trivy-action@0.11.0
+        with:
+          scan-type: 'fs'
+          hide-progress: true
+          format: 'table'
+          security-checks: 'vuln,config'
+        env:
+          KHULNASOFT_KEY: ${{ secrets.KHULNASOFT_KEY }}
+          KHULNASOFT_SECRET: ${{ secrets.KHULNASOFT_SECRET }}
+          TUNNEL_RUN_AS_PLUGIN: 'khulnasoft'
+

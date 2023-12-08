@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
 
-# this shell script is meant to be executed by a Aquasec/Postee "exec"
+# this shell script is meant to be executed by a Khulnasoft/Hooker "exec"
 # action, the event data is passed in through environment variable
-# POSTEE_EVENT
+# HOOKER_EVENT
 #
 # Requirements on JSON format
 # ---------------------------
@@ -15,7 +15,7 @@
 # ------------------
 # - DEFECTDOJO_URL - Defectdojo URL, base URL, script appends path for v2
 # - DEFECTDOJO_API_TOKEN
-# - POSTEE_EVENT - variable containing the JSON content from template stage
+# - HOOKER_EVENT - variable containing the JSON content from template stage
 
 
 TEMP_PREFIX="/tmp/dd-scan-"
@@ -30,8 +30,8 @@ if [ -z "$DEFECTDOJO_URL" ]; then
   exit 1
 fi
 
-if [ -z "$POSTEE_EVENT" ]; then
-  echo "could not read any input data from POSTEE_EVENT"
+if [ -z "$HOOKER_EVENT" ]; then
+  echo "could not read any input data from HOOKER_EVENT"
   exit 1
 fi
 
@@ -42,12 +42,12 @@ _cleanup() {
 
 trap _cleanup EXIT
 
-# write a temporary file with content received from POSTEE_EVENT
+# write a temporary file with content received from HOOKER_EVENT
 TMP_FILE="$(mktemp ${TEMP_PREFIX}XXXXXX)"
 
 _validate_json()
 {
-  if echo "$POSTEE_EVENT" | jq '.defectdojo.scan' | grep 'null' 1>/dev/null; then
+  if echo "$HOOKER_EVENT" | jq '.defectdojo.scan' | grep 'null' 1>/dev/null; then
     echo "ERROR => JSON, unexpected structure \"defectdojo\""
     return 1
   fi
@@ -56,7 +56,7 @@ if ! _validate_json; then
   exit 1
 fi
 
-echo "$POSTEE_EVENT" | jq '.defectdojo.scan' | tee "$TMP_FILE"
+echo "$HOOKER_EVENT" | jq '.defectdojo.scan' | tee "$TMP_FILE"
 
 # Initialize the command string
 COMMAND="curl -X POST -H \"Authorization: Token $DEFECTDOJO_API_TOKEN\""
@@ -65,7 +65,7 @@ COMMAND="curl -X POST -H \"Authorization: Token $DEFECTDOJO_API_TOKEN\""
 # convert the resulting dictionary into multiline
 # string => $key=$value, can further be consumed
 # in a FOR loop generating a FORM entry per row
-FORM_ENTRIES=$(echo "$POSTEE_EVENT" | jq '.defectdojo.metadata | keys_unsorted[] as $k | "\($k)=\( .[$k])"')
+FORM_ENTRIES=$(echo "$HOOKER_EVENT" | jq '.defectdojo.metadata | keys_unsorted[] as $k | "\($k)=\( .[$k])"')
 
 # to be able to ignore whitespaces in values,
 # separator for FOR loops is configured to
@@ -80,7 +80,7 @@ IFS="$OLD_IFS"
 
 DD_IMPORT_URL="${DEFECTDOJO_URL}/api/v2/import-scan/"
 
-# add URL and final JSON payload (trivy report)
+# add URL and final JSON payload (tunnel report)
 COMMAND="$COMMAND -F \"file=@${TMP_FILE}\" ${DD_IMPORT_URL}"
 
 if ! eval "$COMMAND"; then

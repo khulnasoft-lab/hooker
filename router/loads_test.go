@@ -8,11 +8,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/aquasecurity/postee/v2/actions"
-	"github.com/aquasecurity/postee/v2/data"
-	"github.com/aquasecurity/postee/v2/dbservice"
-	"github.com/aquasecurity/postee/v2/msgservice"
-	"github.com/aquasecurity/postee/v2/routes"
+	"github.com/khulnasoft-lab/hooker/v2/actions"
+	"github.com/khulnasoft-lab/hooker/v2/data"
+	"github.com/khulnasoft-lab/hooker/v2/dbservice"
+	"github.com/khulnasoft-lab/hooker/v2/msgservice"
+	"github.com/khulnasoft-lab/hooker/v2/routes"
 )
 
 type ctxWrapper struct {
@@ -32,7 +32,7 @@ type invctn struct {
 	routeName   string
 }
 
-func (ctx *ctxWrapper) MsgHandling(input []byte, action actions.Action, route *routes.InputRoute, inpteval data.Inpteval, aquaServer *string) {
+func (ctx *ctxWrapper) MsgHandling(input []byte, action actions.Action, route *routes.InputRoute, inpteval data.Inpteval, khulnasoftServer *string) {
 	i := invctn{
 		fmt.Sprintf("%T", action),
 		fmt.Sprintf("%T", inpteval),
@@ -97,7 +97,7 @@ func TestLoads(t *testing.T) {
 	t.Skip("FIXME: this test makes an external call")
 	cfgData := `
 name: tenant
-aqua-server: https://demolab.aquasec.com
+khulnasoft-server: https://demolab.khulnasoft.com
 max-db-size: 13MB #  Max size of DB. <numbers><unit suffix> pattern is used, such as "300MB" or "1GB". If empty or 0 then unlimited
 delete-old-data: 7 # delete data older than N day(s).  If empty then we do not delete.d
 
@@ -163,9 +163,9 @@ actions:
 		t.Errorf("'jira' action didn't start!")
 	}
 
-	expectedSrvUrl := "https://demolab.aquasec.com/#/images/"
-	if demoCtx.aquaServer != expectedSrvUrl {
-		t.Errorf("Wrong init of AquaServer link.\nWait: %q\nGot: %q", expectedSrvUrl, demoCtx.aquaServer)
+	expectedSrvUrl := "https://demolab.khulnasoft.com/#/images/"
+	if demoCtx.khulnasoftServer != expectedSrvUrl {
+		t.Errorf("Wrong init of KhulnasoftServer link.\nWait: %q\nGot: %q", expectedSrvUrl, demoCtx.khulnasoftServer)
 	}
 
 	if _, ok := demoCtx.actions["splunk"]; !ok {
@@ -176,7 +176,7 @@ func TestReload(t *testing.T) {
 	t.Skip("FIXME: this test makes an external call")
 	cfgData := `
 name: tenant
-aqua-server: https://demolab.aquasec.com
+khulnasoft-server: https://demolab.khulnasoft.com
 max-db-size: 13MB #  Max size of DB. <numbers><unit suffix> pattern is used, such as "300MB" or "1GB". If empty or 0 then unlimited
 delete-old-data: 7 # delete data older than N day(s).  If empty then we do not delete.d
 

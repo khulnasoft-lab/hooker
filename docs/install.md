@@ -1,69 +1,69 @@
-To run Postee you will first need to configure the [Postee Configuration File](/postee/config), which contains all the message routing logic.
-After the configuration file is ready, you can run the official Postee container image: **aquasec/postee:latest**, or compile it from source.
+To run Hooker you will first need to configure the [Hooker Configuration File](/hooker/config), which contains all the message routing logic.
+After the configuration file is ready, you can run the official Hooker container image: **khulnasoft/hooker:latest**, or compile it from source.
 
-There are different options to mount your customize configuration file to Postee - if running as a Docker container, then you simply mount the configuration files as a volume mount. If running as a Kubernetes deployment, you will need to mount it as a ConfigMap. See the below usage examples for how to run Postee on different scenarios.
+There are different options to mount your customize configuration file to Hooker - if running as a Docker container, then you simply mount the configuration files as a volume mount. If running as a Kubernetes deployment, you will need to mount it as a ConfigMap. See the below usage examples for how to run Hooker on different scenarios.
 
-After Postee will run, it will expose two endpoints, HTTP and HTTPS. You can send your JSON messages to these endpoints, where they will be delivered to their target system based on the defined rules.
+After Hooker will run, it will expose two endpoints, HTTP and HTTPS. You can send your JSON messages to these endpoints, where they will be delivered to their target system based on the defined rules.
 
 ### Docker
-To run Postee as a Docker container, you mount the cfg.yaml to '/config/cfg.yaml' path in the Postee container.
+To run Hooker as a Docker container, you mount the cfg.yaml to '/config/cfg.yaml' path in the Hooker container.
 
 
 ```bash
-docker run -d --name=postee -v /<path to configuration file>/cfg.yaml:/config/cfg.yaml \
-    -e POSTEE_CFG=/config/cfg.yaml -e POSTEE_HTTP=0.0.0.0:8084 -e POSTEE_HTTPS=0.0.0.0:8444 \
-    -p 8084:8084 -p 8444:8444 aquasec/postee:latest
+docker run -d --name=hooker -v /<path to configuration file>/cfg.yaml:/config/cfg.yaml \
+    -e HOOKER_CFG=/config/cfg.yaml -e HOOKER_HTTP=0.0.0.0:8084 -e HOOKER_HTTPS=0.0.0.0:8444 \
+    -p 8084:8084 -p 8444:8444 khulnasoft/hooker:latest
 ```
 
 ### Kubernetes
-When running Postee on Kubernetes, the configuration file is passed as a ConfigMap that is mounted to the Postee pod.
+When running Hooker on Kubernetes, the configuration file is passed as a ConfigMap that is mounted to the Hooker pod.
 
 
 #### Cloud Providers
 
 ``` bash
-kubectl create -f https://raw.githubusercontent.com/aquasecurity/postee/main/deploy/kubernetes/postee.yaml
+kubectl create -f https://raw.githubusercontent.com/khulnasoft-lab/hooker/main/deploy/kubernetes/hooker.yaml
 ```
 
 #### Using HostPath
 
 ``` bash
-kubectl create -f https://raw.githubusercontent.com/aquasecurity/postee/main/deploy/kubernetes/hostPath/postee-pv.yaml
+kubectl create -f https://raw.githubusercontent.com/khulnasoft-lab/hooker/main/deploy/kubernetes/hostPath/hooker-pv.yaml
 ```
 
 !!! Note "Persistent Volumes Explained"
-    - `postee-db`: persistent storage directory `/server/database`
-    - `postee-config`: mount the cfg.yaml to a writable directory `/config/cfg.yaml`
-    - `postee-rego-templates`: mount custom rego templates
-    - `postee-rego-filters`: mount custom rego filters
-To edit the default Postee-UI user
+    - `hooker-db`: persistent storage directory `/server/database`
+    - `hooker-config`: mount the cfg.yaml to a writable directory `/config/cfg.yaml`
+    - `hooker-rego-templates`: mount custom rego templates
+    - `hooker-rego-filters`: mount custom rego filters
+To edit the default Hooker-UI user
 
 ```
-kubectl -n postee set env deployment/my-posteeui -e POSTEE_ADMIN_USER=testabc -e POSTEE_ADMIN_PASSWORD=password
+kubectl -n hooker set env deployment/my-hookerui -e HOOKER_ADMIN_USER=testabc -e HOOKER_ADMIN_PASSWORD=password
 ```
 
-The Postee endpoints
+The Hooker endpoints
 ```
-http://postee-svc.default.svc.cluster.local:8082
+http://hooker-svc.default.svc.cluster.local:8082
 ```
 ```
-https://postee-svc.default.svc.cluster.local:8445
+https://hooker-svc.default.svc.cluster.local:8445
 ```
 
-The Postee-UI endpoint
+The Hooker-UI endpoint
 ````
-http://postee-ui-svc.default.svc.cluster.local:8000
+http://hooker-ui-svc.default.svc.cluster.local:8000
 ````
 
 #### Controller/Runner
 To use Controller/Runner functionality within Kubernetes, you can follow a reference manifest implementation:
-- [Controller](https://github.com/aquasecurity/postee/blob/main/deploy/kubernetes/postee-controller.yaml)
-- [Runner](https://github.com/aquasecurity/postee/blob/main/deploy/kubernetes/postee-runner.yaml)
+- [Controller](https://github.com/khulnasoft-lab/hooker/blob/main/deploy/kubernetes/hooker-controller.yaml)
+- [Runner](https://github.com/khulnasoft-lab/hooker/blob/main/deploy/kubernetes/hooker-runner.yaml)
 
 ### Helm
-When running Postee on Kubernetes, the configuration file is passed as a ConfigMap that is mounted to the Postee pod.
+When running Hooker on Kubernetes, the configuration file is passed as a ConfigMap that is mounted to the Hooker pod.
 
-This chart bootstraps a Postee deployment on a [Kubernetes](https://kubernetes.io/) cluster using the [Helm package manager](https://helm.sh/).
+This chart bootstraps a Hooker deployment on a [Kubernetes](https://kubernetes.io/) cluster using the [Helm package manager](https://helm.sh/).
 
 #### Prerequisites
 - Kubernetes 1.17+
@@ -73,56 +73,56 @@ This chart bootstraps a Postee deployment on a [Kubernetes](https://kubernetes.i
 
 ```bash
 cd deploy/helm
-helm install my-postee -n postee --dry-run --set-file applicationConfigPath="../../cfg.yaml" ./postee
+helm install my-hooker -n hooker --dry-run --set-file applicationConfigPath="../../cfg.yaml" ./hooker
 ```
 
 #### Installing the Chart from the Source Code
 
 ```bash
 cd deploy/helm
-helm install app --create-namespace -n postee ./postee
+helm install app --create-namespace -n hooker ./hooker
 ```
 
-#### Installing from the the Aqua Chart Repository
+#### Installing from the the Khulnasoft Chart Repository
 
-Let's add the Helm chart and deploy Postee executing:
+Let's add the Helm chart and deploy Hooker executing:
 
 
 ```bash
-helm repo add aquasecurity https://aquasecurity.github.io/helm-charts/
+helm repo add khulnasoft-lab https://khulnasoft-lab.github.io/helm-charts/
 helm repo update
-helm search repo postee
-helm install app --create-namespace -n postee aquasecurity/postee
+helm search repo hooker
+helm install app --create-namespace -n hooker khulnasoft-lab/hooker
 ```
 
 Check that all the pods are in Running state:
 
-`kubectl get pods -n postee`
+`kubectl get pods -n hooker`
 
 We check the logs:
 
 ```
-kubectl logs deployment/my-posteeui -n postee | head
+kubectl logs deployment/my-hookerui -n hooker | head
 ```
 
 ```
-kubectl logs statefulsets/my-postee -n postee | head
+kubectl logs statefulsets/my-hooker -n hooker | head
 ```
 
 #### Delete Chart
 
 ```bash
-helm -n postee delete my-postee
+helm -n hooker delete my-hooker
 ```
 
 #### From Source
 Clone and build the project:
 ```bash
-git clone git@github.com:aquasecurity/postee.git
+git clone git@github.com:khulnasoft-lab/hooker.git
 make build
 ```
-After that, modify the cfg.yaml file and set the 'POSTEE_CFG' environment variable to point to it.
+After that, modify the cfg.yaml file and set the 'HOOKER_CFG' environment variable to point to it.
 ```bash
-export POSTEE_CFG=<path to cfg.yaml>
-./bin/postee
+export HOOKER_CFG=<path to cfg.yaml>
+./bin/hooker
 ```

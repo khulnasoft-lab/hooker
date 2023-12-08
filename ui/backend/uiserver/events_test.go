@@ -26,13 +26,13 @@ func TestUiServer_getEvents(t *testing.T) {
    {
       "SigMetadata":{
          "ID":"TRC-2",
-         "hostname":"postee-0"
+         "hostname":"hooker-0"
       }
    },
    {
       "SigMetadata":{
          "ID":"TRC-3",
-         "hostname":"postee-0"
+         "hostname":"hooker-0"
       }
    }
 ]`))
@@ -41,20 +41,20 @@ func TestUiServer_getEvents(t *testing.T) {
    {
       "SigMetadata":{
          "ID":"TRC-2",
-         "hostname":"postee-0"
+         "hostname":"hooker-0"
       }
    },
    {
       "SigMetadata":{
          "ID":"TRC-3",
-         "hostname":"postee-0"
+         "hostname":"hooker-0"
       }
    }
 ]`,
 			expectedStatusCode: http.StatusOK,
 		},
 		{
-			name:               "sad path, no postee url set",
+			name:               "sad path, no hooker url set",
 			expectedStatusCode: http.StatusBadRequest,
 		},
 	}
@@ -65,9 +65,9 @@ func TestUiServer_getEvents(t *testing.T) {
 				ts := httptest.NewServer(tc.tsHandlerFunc)
 				defer ts.Close()
 
-				require.NoError(t, os.Setenv("POSTEE_UI_UPDATE_URL", ts.URL))
+				require.NoError(t, os.Setenv("HOOKER_UI_UPDATE_URL", ts.URL))
 				defer func() {
-					_ = os.Unsetenv("POSTEE_UI_UPDATE_URL")
+					_ = os.Unsetenv("HOOKER_UI_UPDATE_URL")
 				}()
 			}
 

@@ -20,8 +20,8 @@ func TestDependencyTrackAction_Send(t *testing.T) {
 		  "timestamp": "2023-07-26T07:42:41+00:00",
 		  "tools": [
 			{
-			  "vendor": "aquasecurity",
-			  "name": "trivy",
+			  "vendor": "khulnasoft-lab",
+			  "name": "tunnel",
 			  "version": "0.43.1"
 			}
 		  ],
@@ -32,23 +32,23 @@ func TestDependencyTrackAction_Send(t *testing.T) {
 			"purl": "pkg:oci/busybox@sha256:caa382c432891547782ce7140fb3b7304613d3b0438834dce1cad68896ab110a?repository_url=index.docker.io%2Flibrary%2Fbusybox\u0026arch=arm64",
 			"properties": [
 			  {
-				"name": "aquasecurity:trivy:DiffID",
+				"name": "khulnasoft-lab:tunnel:DiffID",
 				"value": "sha256:57d0c5e3b21e4fdac106cfee383d702b92cd433e6e45588153228670b616bc59"
 			  },
 			  {
-				"name": "aquasecurity:trivy:ImageID",
+				"name": "khulnasoft-lab:tunnel:ImageID",
 				"value": "sha256:d38589532d9756ff743d2149a143bfad79833261ff18c24b22088183a651ff65"
 			  },
 			  {
-				"name": "aquasecurity:trivy:RepoDigest",
+				"name": "khulnasoft-lab:tunnel:RepoDigest",
 				"value": "busybox@sha256:caa382c432891547782ce7140fb3b7304613d3b0438834dce1cad68896ab110a"
 			  },
 			  {
-				"name": "aquasecurity:trivy:RepoTag",
+				"name": "khulnasoft-lab:tunnel:RepoTag",
 				"value": "busybox:latest"
 			  },
 			  {
-				"name": "aquasecurity:trivy:SchemaVersion",
+				"name": "khulnasoft-lab:tunnel:SchemaVersion",
 				"value": "2"
 			  }
 			]

@@ -1,7 +1,7 @@
 ---
 name: Support Question
 labels: triage/support
-about: If you have a question about Postee.
+about: If you have a question about Hooker.
 ---
 
 <!--

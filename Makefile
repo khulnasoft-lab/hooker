@@ -14,8 +14,8 @@ default : build
 
 .PHONY: build
 build :
-	@echo "Building Postee...."
-	CGO_ENABLED=0 go build $(LDFLAGS) -o ./postee main.go
+	@echo "Building Hooker...."
+	CGO_ENABLED=0 go build $(LDFLAGS) -o ./hooker main.go
 	@echo "Done!"
 
 fmt :
@@ -33,20 +33,20 @@ cover :
 	go tool cover -html=cover.out
 
 composer :
-	@echo "Running Postee UI...."
+	@echo "Running Hooker UI...."
 	docker-compose up --build
 
 docker-webhook : build
 	@echo "Building image Dockerfile.release...."
-	docker build --no-cache -t aquasec/postee:latest -f Dockerfile.release .
-	docker run -p 8082:8082 -p 8445:8445 aquasec/postee:latest --cfgfile /server/cfg.yaml
+	docker build --no-cache -t khulnasoft/hooker:latest -f Dockerfile.release .
+	docker run -p 8082:8082 -p 8445:8445 khulnasoft/hooker:latest --cfgfile /server/cfg.yaml
 
 docker-ui :
 	@echo "Building image Dockerfile.ui...."
-	docker build --no-cache -t aquasec/postee-ui:latest -f Dockerfile.ui .
+	docker build --no-cache -t khulnasoft/hooker-ui:latest -f Dockerfile.ui .
 
 deploy-k8s :
-	@echo "Deploy Postee in Kubernetes...."
+	@echo "Deploy Hooker in Kubernetes...."
 	kubectl create -f deploy/kubernetes
 	kubectl wait --for=condition=available \
-          --timeout=1m deploy/postee
+          --timeout=1m deploy/hooker

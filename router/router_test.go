@@ -23,10 +23,10 @@ func Test_buildRunnerConfig(t *testing.T) {
   - MY_KEY=secret
   exec-script: |
     #!/bin/sh
-    echo $POSTEE_EVENT
-    echo "this is hello from postee"
+    echo $HOOKER_EVENT
+    echo "this is hello from hooker"
   name: my-exec-from-runner
-  runs-on: postee-runner-1
+  runs-on: hooker-runner-1
   type: exec
 - body-content: |
     This is an another example of a inline body
@@ -34,7 +34,7 @@ func Test_buildRunnerConfig(t *testing.T) {
   enable: true
   method: POST
   name: my-http-post-from-runner
-  runs-on: postee-runner-1
+  runs-on: hooker-runner-1
   type: http
   url: https://webhook.site/<uuid>
 db-verify-interval: 1
@@ -74,7 +74,7 @@ routes:
   template: raw-json
 templates:
 - name: raw-json
-  rego-package: postee.rawmessage.json`,
+  rego-package: hooker.rawmessage.json`,
 		},
 		{
 			name:          "sad path, config not found",
@@ -85,7 +85,7 @@ templates:
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got, err := buildRunnerConfig("postee-runner-1", tc.cfgFile)
+			got, err := buildRunnerConfig("hooker-runner-1", tc.cfgFile)
 			switch {
 			case tc.expectedError != "":
 				assert.Equal(t, tc.expectedError, err.Error(), tc.name)

@@ -1,7 +1,7 @@
 # Distributed Service Healthcheck
 
 ## Introduction
-In this walkthrough, we will setup a globally distributed healthcheck for a service that we expect to be accessible from anywhere. This walkthrough will combine Postee Actions and AWS Lambda to accomplish this.
+In this walkthrough, we will setup a globally distributed healthcheck for a service that we expect to be accessible from anywhere. This walkthrough will combine Hooker Actions and AWS Lambda to accomplish this.
 
 ## Scenario
 A DevOps operator gets paged about a service that they maintain. This page turns out to be flaky and non-actionable. 
@@ -15,9 +15,9 @@ By performing such globally distributed checks, the operator can be rest assured
 ## Sample Configs
 In this case a sample configuration for the components can be described as follows:
 
-### Postee Config
+### Hooker Config
 
-Postee Actions dispatches calls via the HTTP Action to 3 different AWS Lambda URLs. These requests are performed in parallel. In addition, the operator is performed of the trigger and notified via a Slack message.
+Hooker Actions dispatches calls via the HTTP Action to 3 different AWS Lambda URLs. These requests are performed in parallel. In addition, the operator is performed of the trigger and notified via a Slack message.
 
 ```yaml
 routes:
@@ -76,7 +76,7 @@ def lambda_handler(event, context):
         raise
     else:
         print('Check passed!')
-        return ('aquasec.com is up! at {}'.format(timeNow))
+        return ('khulnasoft.com is up! at {}'.format(timeNow))
     finally:
         print('Check complete at {}'.format(str(datetime.now())))
 ```

@@ -10,17 +10,17 @@ import (
 func (srv *uiServer) getEvents(w http.ResponseWriter, r *http.Request) {
 	log.Printf("configured config path %s", srv.cfgPath)
 
-	posteeUrl := os.Getenv("POSTEE_UI_UPDATE_URL")
-	if len(posteeUrl) <= 0 {
+	hookerUrl := os.Getenv("HOOKER_UI_UPDATE_URL")
+	if len(hookerUrl) <= 0 {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("No Postee URL configured, set POSTEE_UI_UPDATE_URL to the Postee URL")
+		log.Println("No Hooker URL configured, set HOOKER_UI_UPDATE_URL to the Hooker URL")
 		return
 	}
 
-	resp, err := http.Get(posteeUrl + "/events")
+	resp, err := http.Get(hookerUrl + "/events")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Unable to reach Postee at URL: " + posteeUrl + "/events" + " err: " + err.Error())
+		log.Println("Unable to reach Hooker at URL: " + hookerUrl + "/events" + " err: " + err.Error())
 		return
 	}
 

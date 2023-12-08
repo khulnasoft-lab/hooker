@@ -1,4 +1,4 @@
-package postee.vuls.opsgenie
+package hooker.vuls.opsgenie
 
 title = input.image
 

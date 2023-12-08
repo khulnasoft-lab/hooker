@@ -1,9 +1,9 @@
-## postee-configmap
+## hooker-configmap
 ---
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: postee-config
+  name: hooker-config
 data:
   cfg.yaml: |
     ---
@@ -11,9 +11,9 @@ data:
     # routes, templates and actions sections.
 
     name: tenant            #  The tenant name
-    aqua-server:            #  URL of Aqua Server for links. E.g. https://myserver.aquasec.com
+    khulnasoft-server:            #  URL of Khulnasoft Server for links. E.g. https://myserver.khulnasoft.com
     max-db-size: 1000       #  Max size of DB in MB. if empty then unlimited
-    db-verify-interval: 1   #  How often to check the DB size. By default, Postee checks every 1 hour
+    db-verify-interval: 1   #  How often to check the DB size. By default, Hooker checks every 1 hour
 
     # Routes are used to define how to handle an incoming message
     routes:
@@ -24,13 +24,13 @@ data:
     - name: actions-route
       input: contains(input.SigMetadata.ID, "TRC-2")
       serialize-actions: true                       # Optional. Serialize actions in route.
-      actions: [save-tracee-event-log, send-event, tag-k8s-resources, kill-vulnerable-pod]
+      actions: [save-tracker-event-log, send-event, tag-k8s-resources, kill-vulnerable-pod]
       template: raw-json
 
     # Templates are used to format a message
     templates:
     - name: raw-json                        # route message "As Is" to external webhook
-      rego-package: postee.rawmessage.json
+      rego-package: hooker.rawmessage.json
 
     # Actions are target services that should consume the messages
     actions:
@@ -39,13 +39,13 @@ data:
       enable: true
 
     # Define a custom action of exec type, that can take params.
-    - name: save-tracee-event-log
+    - name: save-tracker-event-log
       type: exec
       enable: true
       env: ["MY_ENV_VAR=foo_bar_baz", "MY_KEY=secret"]
-      exec-script: |    # We create a persistent volume "/postee-artifacts/" to store logs
+      exec-script: |    # We create a persistent volume "/hooker-artifacts/" to store logs
         #!/bin/sh
-        echo $POSTEE_EVENT >> /postee-artifacts/tracee.event.log
+        echo $HOOKER_EVENT >> /hooker-artifacts/tracker.event.log
         
     - name: send-event
       type: http
@@ -56,7 +56,7 @@ data:
         "Foo": ["bar", "baz"]
       timeout: 10s                          # Optional. Timeout value in XX(s,m,h)
       body-content: |                       # Optional. Body of the HTTP request
-        This is an example of sending a Postee Event
+        This is an example of sending a Hooker Event
         via an HTTP Action. 
         
         Event Details: 
@@ -70,7 +70,7 @@ data:
       project-key: XYZ                     # Required. Specify the JIRA product key
       user: johnwick@example.com           # Required. E.g :johndoe@gmail.com"
       password: hunter2                    # Optional. Specify Jira user API key. Used only for Jira Cloud
-      board:  "postee-actions"             # Optional. Specify the Jira board name to open tickets on
+      board:  "hooker-actions"             # Optional. Specify the Jira board name to open tickets on
       labels: ["vulnerability"]            # Optional, specify array of labels to add to Ticket, for example: ["label1", "label2"]
       priority:  "High"                    # Optional. Specify the issues severity. Default is "High"
       assignee:  ["devops@example.com"]    # Optional. Specify the assigned user. Default is the user that opened the ticket
@@ -91,20 +91,20 @@ data:
       enable: true
       exec-script: |
         #!/bin/sh
-        PODNAME=$(echo $POSTEE_EVENT | jq -r .SigMetadata.Hostname)    
+        PODNAME=$(echo $HOOKER_EVENT | jq -r .SigMetadata.Hostname)    
     
         curl -k -X DELETE \
         -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
         https://kubernetes/api/v1/namespaces/default/pods/$PODNAME
         
-## postee
+## hooker
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: postee
-  name: postee-svc
+    app: hooker
+  name: hooker-svc
 spec:
   ports:
   - name: https
@@ -116,38 +116,38 @@ spec:
     protocol: TCP
     targetPort: 8082
   selector:
-    app: postee
+    app: hooker
   type: ClusterIP
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   labels:
-    app: postee
-  name: postee
+    app: hooker
+  name: hooker
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postee
-  serviceName: postee-svc
+      app: hooker
+  serviceName: hooker-svc
   volumeClaimTemplates:
   - metadata:
-      name: postee-db
+      name: hooker-db
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
           storage: 1Gi
   - metadata:
-      name: postee-artifacts
+      name: hooker-artifacts
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
           storage: 100Mi
   - metadata:
-      name: postee-config
+      name: hooker-config
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
@@ -170,8 +170,8 @@ spec:
   template:
     metadata:
       labels:
-        app: postee
-      name: postee
+        app: hooker
+      name: hooker
     spec:
       initContainers:
       - name: setting-db
@@ -182,7 +182,7 @@ spec:
         - "1099:1099"
         - /server
         volumeMounts:
-        - name: postee-db
+        - name: hooker-db
           mountPath: /server/database
         - name: rego-templates
           mountPath: /server/rego-templates/custom
@@ -198,16 +198,16 @@ spec:
         - name: configmap-vol
           mountPath: /configmap
           readOnly: false
-        - name: postee-config
+        - name: hooker-config
           mountPath: /config
       containers:
-      - image: postee-local:latest
+      - image: hooker-local:latest
         imagePullPolicy: IfNotPresent
-        name: postee
+        name: hooker
         env:
-        - name: POSTEE_CFG
+        - name: HOOKER_CFG
           value: /config/cfg.yaml
-        - name: POSTEE_DEBUG
+        - name: HOOKER_DEBUG
           value: "not"
         ports:
         - name: http
@@ -220,16 +220,16 @@ spec:
         - name: configmap-vol
           mountPath: /configmap
           readOnly: false
-        - name: postee-db
+        - name: hooker-db
           mountPath: /server/database
-        - name: postee-config
+        - name: hooker-config
           mountPath: /config
         - name: rego-templates
           mountPath: /server/rego-templates/custom
         - name: rego-filters
           mountPath: /server/rego-filters/custom
-        - name: postee-artifacts
-          mountPath: /postee-artifacts
+        - name: hooker-artifacts
+          mountPath: /hooker-artifacts
         securityContext:
           allowPrivilegeEscalation: false
           runAsNonRoot: true
@@ -257,42 +257,42 @@ spec:
       volumes:
       - name: configmap-vol
         configMap:
-          name: postee-config
+          name: hooker-config
           items:
           - key: cfg.yaml
             path: cfg.yaml
 
-## postee-ui
+## hooker-ui
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: postee-ui-svc
+  name: hooker-ui-svc
 spec:
   ports:
-  - name: postee-ui
+  - name: hooker-ui
     port: 8000
     protocol: TCP
     targetPort: 8000
   selector:
-    app: postee-ui
+    app: hooker-ui
   type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: postee-ui
-  name: postee-ui
+    app: hooker-ui
+  name: hooker-ui
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postee-ui
+      app: hooker-ui
   template:
     metadata:
       labels:
-        app: postee-ui
+        app: hooker-ui
     spec:
       initContainers:
       - name: chmod-er
@@ -303,30 +303,30 @@ spec:
         - "1099:1099"
         - /config
         volumeMounts:
-        - name: postee-config
+        - name: hooker-config
           mountPath: /config
       containers:
-      - image: aquasec/postee-ui:latest
+      - image: khulnasoft/hooker-ui:latest
         imagePullPolicy: Always
-        name: postee-ui
+        name: hooker-ui
         env:
-        - name: POSTEE_UI_CFG
+        - name: HOOKER_UI_CFG
           value: /config/cfg.yaml
-        - name: POSTEE_UI_PORT
+        - name: HOOKER_UI_PORT
           value: "8000"
-        - name: POSTEE_UI_UPDATE_URL
-          value: "http://postee-svc:8082"
-        - name: POSTEE_ADMIN_USER
+        - name: HOOKER_UI_UPDATE_URL
+          value: "http://hooker-svc:8082"
+        - name: HOOKER_ADMIN_USER
           value: admin
-        - name: POSTEE_ADMIN_PASSWORD
+        - name: HOOKER_ADMIN_PASSWORD
           value: admin
         ports:
         - containerPort: 8000
           protocol: TCP
         volumeMounts:
-        - name: postee-db
+        - name: hooker-db
           mountPath: /server/database
-        - name: postee-config
+        - name: hooker-config
           mountPath: /config
         securityContext:
           allowPrivilegeEscalation: false
@@ -353,9 +353,9 @@ spec:
           initialDelaySeconds: 10
           periodSeconds: 10
       volumes:
-      - name: postee-db
+      - name: hooker-db
         persistentVolumeClaim:
-          claimName: postee-db-postee-0
-      - name: postee-config
+          claimName: hooker-db-hooker-0
+      - name: hooker-config
         persistentVolumeClaim:
-          claimName: postee-config-postee-0
+          claimName: hooker-config-hooker-0

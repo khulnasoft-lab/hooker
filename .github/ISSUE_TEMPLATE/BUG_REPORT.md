@@ -16,7 +16,7 @@ Briefly describe the problem you are having in a few paragraphs.
 ## What happened instead?
 
 
-## Output of run with `POSTEE_DEBUG=true`:
+## Output of run with `HOOKER_DEBUG=true`:
 
 ```
 (paste your output here)

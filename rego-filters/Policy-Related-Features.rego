@@ -1,12 +1,12 @@
-package postee
+package hooker
 import future.keywords.in
 #Constants vulnerability values. Don't remove it!
 allVulnerability := {"negligible": 0, "low": 1, "medium": 2, "high": 3, "critical": 4}
 
 ArrayPermitedImageNames := {"ubuntu", "busybox"} #Comma separated list of images that will trigger the integration.
 ArrayIgnoredImageNames := {"alpine", "postgres"}  #List of comma separated images that will be ignored by the integration
-ArrayPermitedRegistry := {"Aqua"} #The list of registry name that triggers the integration.
-ArrayIgnoreRegistry := {"Aqua"} #Comma separated list of registries that will be ignored by the integration
+ArrayPermitedRegistry := {"Khulnasoft"} #The list of registry name that triggers the integration.
+ArrayIgnoreRegistry := {"Khulnasoft"} #Comma separated list of registries that will be ignored by the integration
 Vulnerability := "low" #The minimum vulnerability severity that triggers the integration.
 
 

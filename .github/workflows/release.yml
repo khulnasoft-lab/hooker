@@ -31,7 +31,7 @@ jobs:
       - name: Run Integration Tests
         run: make test-integration
 
-      - name: Run Trivy vulnerability scanner in repo mode
+      - name: Run Tunnel vulnerability scanner in repo mode
         uses: aquasecurity/trivy-action@0.11.0
         with:
           scan-type: 'fs'
@@ -40,7 +40,7 @@ jobs:
           severity: 'CRITICAL'
           exit-code: 0
 
-      - name: Run Trivy vulnerability scanner against Aqua Cloud
+      - name: Run Tunnel vulnerability scanner against Khulnasoft Cloud
         uses: aquasecurity/trivy-action@0.11.0
         with:
           scan-type: 'fs'
@@ -48,9 +48,9 @@ jobs:
           format: 'table'
           security-checks: 'vuln,config'
         env:
-          AQUA_KEY: ${{ secrets.AQUA_KEY }}
-          AQUA_SECRET: ${{ secrets.AQUA_SECRET }}
-          TRIVY_RUN_AS_PLUGIN: 'aqua'
+          KHULNASOFT_KEY: ${{ secrets.KHULNASOFT_KEY }}
+          KHULNASOFT_SECRET: ${{ secrets.KHULNASOFT_SECRET }}
+          TUNNEL_RUN_AS_PLUGIN: 'khulnasoft'
 
   release:
     name: Release

@@ -1,20 +1,20 @@
-site_name: Postee
-site_url: https://aquasecurity.github.io/postee
+site_name: Hooker
+site_url: https://khulnasoft-lab.github.io/hooker
 site_description: Integrate vulnerability scanning with a variety of systems.
 docs_dir: docs/
-repo_name: Postee
-repo_url: https://github.com/aquasecurity/postee
+repo_name: Hooker
+repo_url: https://github.com/khulnasoft-lab/hooker
 edit_uri: ""
-copyright: Copyright 2019-2022 Aqua Security Software Ltd.
+copyright: Copyright 2019-2022 Khulnasoft Security Software Ltd.
 
 nav:
 - Introduction: index.md
 - Use cases:
   - Simple Examples: examples.md
   - Blueprints:
-    - Trivy Scan: blueprints/trivy-vulnerability-scan.md
-    - Trivy AWS Security Hub: blueprints/trivy-aws-security-hub.md
-    - Trivy Operator: blueprints/trivy-operator.md
+    - Tunnel Scan: blueprints/tunnel-vulnerability-scan.md
+    - Tunnel AWS Security Hub: blueprints/tunnel-aws-security-hub.md
+    - Tunnel Operator: blueprints/tunnel-operator.md
     - Pagerduty: blueprints/devops-pagerduty.md
     - Others:
       - External Healthcheck: blueprints/external-healthcheck.md
@@ -28,15 +28,15 @@ nav:
   - Actions: actions.md
   - Controller/Runner: controller-runner.md
 - Demo: demo.md
-- Aqua Cloud: aquacloud.md
-- Postee UI: ui.md
+- Khulnasoft Cloud: khulnasoftcloud.md
+- Hooker UI: ui.md
 - Advanced: advanced.md
 
 theme:
   name: material
   custom_dir: overrides
   language: 'en'
-  logo: img/postee.png
+  logo: img/hooker.png
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -63,20 +63,20 @@ markdown_extensions:
 # All data defined under extra is automatically exposed as a variable and can
 # be used from the template. For example, {{ var.version }}.
 #
-# Requires pip install mike and pip install git+https://${GH_TOKEN}@github.com/squidfunk/mkdocs-material-insiders.git
+# Requires pip install mike and pip install git+https://${GH_TOKEN}@github.com/squidfunk/mkdocs-material.git
 extra:
   generator: false
   social:
   - icon: fontawesome/brands/github
-    link: https://github.com/aquasecurity
+    link: https://github.com/khulnasoft-lab
   - icon: fontawesome/brands/slack
-    link: https://slack.aquasec.com/
+    link: https://slack.khulnasoft.com/
   - icon: fontawesome/brands/youtube
     link: https://www.youtube.com/channel/UCZd5NF4XJRaU-yfextsY-pw
   - icon: fontawesome/brands/twitter
-    link: https://twitter.com/AquaSecTeam
+    link: https://twitter.com/KhulnasoftSecTeam
   - icon: fontawesome/brands/linkedin
-    link: https://www.linkedin.com/company/aquasecteam/
+    link: https://www.linkedin.com/company/khulnasoftteam/
   version:
     provider: mike
 

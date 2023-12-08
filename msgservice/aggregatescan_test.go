@@ -5,8 +5,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/aquasecurity/postee/v2/dbservice"
-	"github.com/aquasecurity/postee/v2/routes"
+	"github.com/khulnasoft-lab/hooker/v2/dbservice"
+	"github.com/khulnasoft-lab/hooker/v2/routes"
 )
 
 func TestAggregateIssuesPerTicket(t *testing.T) {

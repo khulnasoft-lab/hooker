@@ -6,7 +6,7 @@
       </button>
     </div>
     <div class="card-header"><h3>Settings</h3></div>
-    <div class="card-body">Modify current Postee settings.</div>
+    <div class="card-body">Modify current Hooker settings.</div>
     <div class="card">
       <form @submit.prevent="doSubmit">
         <div class="card-body">
@@ -19,11 +19,11 @@
             :inputHandler="updateField"
           />
           <PropertyField
-            :id="'aquaServer'"
-            :label="'Aqua Server'"
-            :value="formValues.AquaServer"
-            :name="'AquaServer'"
-            :description="'url of Aqua Server for links. E.g. https://myserver.aquasec.com'"
+            :id="'khulnasoftServer'"
+            :label="'Khulnasoft Server'"
+            :value="formValues.KhulnasoftServer"
+            :name="'KhulnasoftServer'"
+            :description="'url of Khulnasoft Server for links. E.g. https://myserver.khulnasoft.com'"
             :inputHandler="updateField"
           />
           <PropertyField

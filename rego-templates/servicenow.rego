@@ -1,9 +1,9 @@
-package postee.servicenow
+package hooker.servicenow
 
 import future.keywords
 import future.keywords.if
-import data.postee.by_flag
-import data.postee.with_default
+import data.hooker.by_flag
+import data.hooker.with_default
 
 ################################################ Templates ################################################
 #main template to render message
@@ -185,14 +185,14 @@ vln_list(severity) = vlnrb {
                     resource_name = with_default(resource, "name", "none")
                     resource_version = with_default(resource, "version", "none")
 
-                    item.vulnerabilities[j].aqua_severity == severity # only items with severity matched
+                    item.vulnerabilities[j].khulnasoft_severity == severity # only items with severity matched
                     r := [vlnname, resource_name, resource_version, fxvrsn]
               ]
 }
 ###########################################################################################################
-postee := with_default(input, "postee", {})
-aqua_server := with_default(postee, "AquaServer", "")
-server_url := trim_suffix(aqua_server, "images/")
+hooker := with_default(input, "hooker", {})
+khulnasoft_server := with_default(hooker, "KhulnasoftServer", "")
+server_url := trim_suffix(khulnasoft_server, "images/")
 
 report_type := "function" if{
     input.entity_type == 1
@@ -200,7 +200,7 @@ report_type := "function" if{
     input.entity_type == 2
 } else = "image"
 
-title = sprintf(`Aqua security | %s | %s | Scan report`, [report_type, input.image])
+title = sprintf(`Khulnasoft security | %s | %s | Scan report`, [report_type, input.image])
 
 ## url formats:
 ## function: <server_url>/#/functions/<registry>/<image>
@@ -232,7 +232,7 @@ vulnerability_summary_low := input.vulnerability_summary.low
 default vulnerability_summary_negligible := 0
 vulnerability_summary_negligible := input.vulnerability_summary.negligible
 
-aggregation_pkg := "postee.vuls.html.aggregation"
+aggregation_pkg := "hooker.vuls.html.aggregation"
 
 ############################################## result values #############################################
 result = msg {

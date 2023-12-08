@@ -6,17 +6,17 @@ import (
 	"strings"
 	"time"
 
-	"github.com/aquasecurity/postee/v2/actions"
-	"github.com/aquasecurity/postee/v2/data"
-	"github.com/aquasecurity/postee/v2/dbservice"
-	"github.com/aquasecurity/postee/v2/regoservice"
-	"github.com/aquasecurity/postee/v2/routes"
+	"github.com/khulnasoft-lab/hooker/v2/actions"
+	"github.com/khulnasoft-lab/hooker/v2/data"
+	"github.com/khulnasoft-lab/hooker/v2/dbservice"
+	"github.com/khulnasoft-lab/hooker/v2/regoservice"
+	"github.com/khulnasoft-lab/hooker/v2/routes"
 )
 
 type MsgService struct {
 }
 
-func (scan *MsgService) MsgHandling(input []byte, output actions.Action, route *routes.InputRoute, inpteval data.Inpteval, AquaServer *string) {
+func (scan *MsgService) MsgHandling(input []byte, output actions.Action, route *routes.InputRoute, inpteval data.Inpteval, KhulnasoftServer *string) {
 	if output == nil {
 		return
 	}
@@ -58,13 +58,13 @@ func (scan *MsgService) MsgHandling(input []byte, output actions.Action, route *
 
 	}
 
-	posteeOpts := map[string]string{
-		"AquaServer": *AquaServer,
+	hookerOpts := map[string]string{
+		"KhulnasoftServer": *KhulnasoftServer,
 	}
 
-	in["postee"] = posteeOpts
+	in["hooker"] = hookerOpts
 
-	content, err := inpteval.Eval(in, *AquaServer)
+	content, err := inpteval.Eval(in, *KhulnasoftServer)
 	if err != nil {
 		log.Printf("Error while evaluating input: %v", err)
 		return

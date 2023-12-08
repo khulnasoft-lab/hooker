@@ -8,15 +8,15 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/aquasecurity/postee/v2/formatting"
-	"github.com/aquasecurity/postee/v2/layout"
+	"github.com/khulnasoft-lab/hooker/v2/formatting"
+	"github.com/khulnasoft-lab/hooker/v2/layout"
 
 	"net/http"
 	"net/url"
 	"os"
 	"strings"
 
-	"github.com/aquasecurity/go-jira"
+	"github.com/khulnasoft-lab/go-jira"
 )
 
 const (

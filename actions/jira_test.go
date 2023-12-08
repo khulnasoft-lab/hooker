@@ -9,8 +9,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/aquasecurity/go-jira"
-	"github.com/aquasecurity/postee/v2/formatting"
+	"github.com/khulnasoft-lab/go-jira"
+	"github.com/khulnasoft-lab/hooker/v2/formatting"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

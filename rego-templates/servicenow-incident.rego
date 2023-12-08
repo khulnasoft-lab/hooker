@@ -1,8 +1,8 @@
-package postee.servicenow.incident
+package hooker.servicenow.incident
 
 import future.keywords
-import data.postee.by_flag
-import data.postee.with_default
+import data.hooker.by_flag
+import data.hooker.with_default
 
 ################################################ Templates ################################################
 result_tpl = `
@@ -37,7 +37,7 @@ row_tpl:=`
 ###########################################################################################################
 title = input.name
 
-aggregation_pkg := "postee.vuls.html.aggregation"
+aggregation_pkg := "hooker.vuls.html.aggregation"
 
 data_list(d) := list {
 	dat := split(d, ",\"")
@@ -48,7 +48,7 @@ data_list(d) := list {
                     without_close_bkt := replace(without_open_bkt, "}", "")
                     s := split(without_close_bkt, ":")
                     value_with_colon := trim_left(without_close_bkt, sprintf("%s", [s[0]]))
-                    s[0] != "tracee_finding"
+                    s[0] != "tracker_finding"
                     r := [s[0], trim_left(value_with_colon, ":")]
     ]
 }

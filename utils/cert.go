@@ -64,7 +64,7 @@ func generateCertificate(hosts []string, keyFile string, certFile string) error 
 	template := x509.Certificate{
 		SerialNumber: serialNumber,
 		Subject: pkix.Name{
-			Organization: []string{"Aquasec"},
+			Organization: []string{"Khulnasoft"},
 		},
 		NotBefore:             notBefore,
 		NotAfter:              notAfter,

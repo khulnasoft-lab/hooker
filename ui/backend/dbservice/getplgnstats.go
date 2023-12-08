@@ -4,7 +4,7 @@ import (
 	"os"
 	"strconv"
 
-	hookDbService "github.com/aquasecurity/postee/v2/dbservice"
+	hookDbService "github.com/khulnasoft-lab/hooker/v2/dbservice"
 	bolt "go.etcd.io/bbolt"
 )
 

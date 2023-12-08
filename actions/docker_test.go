@@ -122,14 +122,14 @@ func TestDocketClient_Send(t *testing.T) {
 				assert.Equal(t, containertypes.Config{
 					Image: "docker.io/library/alpine",
 					Cmd:   []string{"echo", "hello world"},
-					Env:   []string{"FOO=bar", `POSTEE_EVENT="foo bar baz"`},
+					Env:   []string{"FOO=bar", `HOOKER_EVENT="foo bar baz"`},
 				}, *config)
 
 				assert.Equal(t, containertypes.HostConfig{
 					Mounts: []mount.Mount{{Type: mount.TypeBind, Source: "foo-src", Target: "bar-dst"}}, NetworkMode: "host",
 				}, *hostConfig)
 
-				assert.Contains(t, containerName, "postee-my-docker-action")
+				assert.Contains(t, containerName, "hooker-my-docker-action")
 
 				return containertypes.ContainerCreateCreatedBody{
 					ID: "foo-bar-123",
@@ -137,7 +137,7 @@ func TestDocketClient_Send(t *testing.T) {
 			},
 			containerRemoveFunc: func(ctx context.Context, container string, options types.ContainerRemoveOptions) error {
 
-				assert.Equal(t, "postee-my-docker-action-1471d64a-6c64-4527-bbd8-7bc772678db8", container)
+				assert.Equal(t, "hooker-my-docker-action-1471d64a-6c64-4527-bbd8-7bc772678db8", container)
 				return nil
 			},
 		},
@@ -151,14 +151,14 @@ func TestDocketClient_Send(t *testing.T) {
 				assert.Equal(t, containertypes.Config{
 					Image: "docker.io/library/alpine",
 					Cmd:   []string{"kubectl", "delete", "pod", "foo.host"},
-					Env:   []string{"FOO=bar", `POSTEE_EVENT="{"hostname":"foo.host"}"`},
+					Env:   []string{"FOO=bar", `HOOKER_EVENT="{"hostname":"foo.host"}"`},
 				}, *config)
 
 				assert.Equal(t, containertypes.HostConfig{
 					Mounts: []mount.Mount{{Type: mount.TypeBind, Source: "foo-src", Target: "bar-dst"}}, NetworkMode: "host",
 				}, *hostConfig)
 
-				assert.Contains(t, containerName, "postee-my-docker-action")
+				assert.Contains(t, containerName, "hooker-my-docker-action")
 
 				return containertypes.ContainerCreateCreatedBody{
 					ID: "foo-bar-123",
@@ -166,7 +166,7 @@ func TestDocketClient_Send(t *testing.T) {
 			},
 			containerRemoveFunc: func(ctx context.Context, container string, options types.ContainerRemoveOptions) error {
 
-				assert.Equal(t, "postee-my-docker-action-1471d64a-6c64-4527-bbd8-7bc772678db8", container)
+				assert.Equal(t, "hooker-my-docker-action-1471d64a-6c64-4527-bbd8-7bc772678db8", container)
 				return nil
 			},
 		},

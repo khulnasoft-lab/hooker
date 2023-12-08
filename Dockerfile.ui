@@ -12,7 +12,7 @@ COPY . /server
 WORKDIR /server/ui/backend
 RUN apk add git
 ARG TARGETOS TARGETARCH
-RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build --ldflags "-s -w" -o posteeui
+RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build --ldflags "-s -w" -o hookerui
 
 FROM alpine:3.18.2
 EXPOSE 8001
@@ -24,14 +24,14 @@ RUN mkdir /server
 RUN mkdir /server/database
 RUN mkdir /config
 
-COPY --from=gobuilder /server/ui/backend/posteeui /uiserver
+COPY --from=gobuilder /server/ui/backend/hookerui /uiserver
 COPY --from=vuebuilder /frontend/dist /uiserver/www
 
 WORKDIR /uiserver
-RUN addgroup -g 1099 postee
-RUN adduser -D -g '' -G postee -u 1099 postee
-RUN chown -R postee:postee /server
-RUN chown -R postee:postee /config
-RUN chown -R postee:postee /uiserver
-USER postee
-ENTRYPOINT ["/uiserver/posteeui"]
+RUN addgroup -g 1099 hooker
+RUN adduser -D -g '' -G hooker -u 1099 hooker
+RUN chown -R hooker:hooker /server
+RUN chown -R hooker:hooker /config
+RUN chown -R hooker:hooker /uiserver
+USER hooker
+ENTRYPOINT ["/uiserver/hookerui"]

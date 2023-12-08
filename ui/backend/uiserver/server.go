@@ -64,12 +64,12 @@ func Instance(webLocalPath, port, cfg, webhookUrl, admusr string, admpwd string)
 }
 
 func (srv *uiServer) Start() {
-	log.Print("UI Postee server starting...")
+	log.Print("UI Hooker server starting...")
 	http.ListenAndServe(":"+srv.port, srv.router)
 }
 
 func (srv *uiServer) Stop() {
-	log.Print("UI Postee server stopped!")
+	log.Print("UI Hooker server stopped!")
 }
 
 func (ctx *uiServer) pingHandler(w http.ResponseWriter, r *http.Request) {

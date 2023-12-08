@@ -1,9 +1,9 @@
-Here are some Postee configuration samples to showcase a variety of use cases.
+Here are some Hooker configuration samples to showcase a variety of use cases.
 
 ??? example "Forward all "Block" audit events"
     ```yaml
     name: myserver
-    aqua-server: https://myserver.com
+    khulnasoft-server: https://myserver.com
     max-db-size: 1000MB
     delete-old-data: 100
     db-verify-interval: 1
@@ -22,7 +22,7 @@ Here are some Postee configuration samples to showcase a variety of use cases.
 
     templates:
     - name: raw-html
-      rego-package:  postee.rawmessage.html
+      rego-package:  hooker.rawmessage.html
     ```
 
 ??? example "Forward Critical vulnerabilities"
@@ -31,7 +31,7 @@ Here are some Postee configuration samples to showcase a variety of use cases.
     # Note that duplicate events of same image will be ignored for 30 days.
 
     name: myserver
-    aqua-server: https://myserver.com
+    khulnasoft-server: https://myserver.com
     max-db-size: 1000MB
     delete-old-data: 100
     db-verify-interval: 1
@@ -53,7 +53,7 @@ Here are some Postee configuration samples to showcase a variety of use cases.
 
     templates:
     - name: raw-html
-      rego-package:  postee.rawmessage.html
+      rego-package:  hooker.rawmessage.html
     ```
 
 ??? example "Forward Drift events"
@@ -61,7 +61,7 @@ Here are some Postee configuration samples to showcase a variety of use cases.
     # This example will forward events of Drift Prevention to MS Teams.
 
     name: myserver
-    aqua-server: https://myserver.com
+    khulnasoft-server: https://myserver.com
     max-db-size: 1000MB       #  Max size of DB. <numbers><unit suffix> pattern is used, such as "300MB" or "1GB". If empty or 0 then unlimited
     delete-old-data: 100    # delete data older than N day(s).  If empty then we do not delete.
     db-verify-interval: 1   # hours. an Interval between tests of DB. Default: 1 hour
@@ -80,13 +80,13 @@ Here are some Postee configuration samples to showcase a variety of use cases.
 
     templates:
     - name: raw-html                        #  Raw message json
-      rego-package:  postee.rawmessage.html #  HTLM template REGO package
+      rego-package:  hooker.rawmessage.html #  HTLM template REGO package
     ```
 
 ??? example "Add Kubernetes Labels and Annotations"
     ```yaml
     name: tenant
-    aqua-server:
+    khulnasoft-server:
     max-db-size: 1000MB
     db-verify-interval: 1
 
@@ -102,7 +102,7 @@ Here are some Postee configuration samples to showcase a variety of use cases.
 
     templates:
     - name: raw-json
-      rego-package: postee.rawmessage.json
+      rego-package: hooker.rawmessage.json
 
     actions:
     - name: stdout
@@ -127,7 +127,7 @@ Here are some Postee configuration samples to showcase a variety of use cases.
 ??? example "Run ad-hoc docker image"
     ```yaml
     name: tenant
-    aqua-server:
+    khulnasoft-server:
     max-db-size: 1000MB
     db-verify-interval: 1
 
@@ -143,7 +143,7 @@ Here are some Postee configuration samples to showcase a variety of use cases.
 
     templates:
     - name: raw-json
-      rego-package: postee.rawmessage.json
+      rego-package: hooker.rawmessage.json
 
     actions:
     - name: stdout
@@ -163,7 +163,7 @@ Here are some Postee configuration samples to showcase a variety of use cases.
 ??? example "Collect and send logs"
     ```yaml
     name: tenant
-    aqua-server: localhost
+    khulnasoft-server: localhost
     max-db-size: 1000MB
     db-verify-interval: 1
 
@@ -180,7 +180,7 @@ Here are some Postee configuration samples to showcase a variety of use cases.
 
     templates:
     - name: raw-json
-      rego-package: postee.rawmessage.json
+      rego-package: hooker.rawmessage.json
 
     actions:
     - name: stdout
@@ -193,14 +193,14 @@ Here are some Postee configuration samples to showcase a variety of use cases.
       env: ["MY_ENV_VAR=foo_bar_baz", "MY_KEY=secret"]
       exec-script: |
       #!/bin/sh
-      echo $POSTEE_EVENT >> /tmp/postee.event.logs
+      echo $HOOKER_EVENT >> /tmp/hooker.event.logs
 
     - name: my-http-post-file
       type: http
       enable: true
       url: "https://my-fancy-url.com"
       method: POST
-      body-file: /tmp/postee.event.logs
+      body-file: /tmp/hooker.event.logs
 
     - name: my-http-post-content
       type: http

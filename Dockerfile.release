@@ -9,15 +9,15 @@ EXPOSE 8445
 RUN mkdir /server
 RUN mkdir /server/database
 RUN mkdir /config
-COPY postee /server/
+COPY hooker /server/
 COPY rego-templates /server/rego-templates
 COPY rego-filters /server/rego-filters
 COPY cfg.yaml /config/
 WORKDIR /server
-RUN chmod +x postee
-RUN addgroup -g 1099 postee
-RUN adduser -D -g '' -G postee -u 1099 postee
-RUN chown -R postee:postee /server
-RUN chown -R postee:postee /config
-USER postee
-ENTRYPOINT ["/server/postee"]
+RUN chmod +x hooker
+RUN addgroup -g 1099 hooker
+RUN adduser -D -g '' -G hooker -u 1099 hooker
+RUN chown -R hooker:hooker /server
+RUN chown -R hooker:hooker /config
+USER hooker
+ENTRYPOINT ["/server/hooker"]

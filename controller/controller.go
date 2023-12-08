@@ -10,15 +10,15 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/aquasecurity/postee/v2/router"
+	"github.com/khulnasoft-lab/hooker/v2/router"
 	"github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nkeys"
 )
 
 const (
-	NATSEventSubject  = "postee.events"
-	NATSConfigSubject = "postee.config"
+	NATSEventSubject  = "hooker.events"
+	NATSConfigSubject = "hooker.config"
 )
 
 type Controller struct {

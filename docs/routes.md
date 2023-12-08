@@ -2,7 +2,7 @@ A route is used to control message flows. Each route includes the input message 
 
 The most important part of a route is the **input definition using the Rego language** to define what are the conditions for an incoming message to be handled by a certain route.
 
-![settings](img/postee-email-route.png)
+![settings](img/hooker-email-route.png)
 
 !!! tip
     See the complete Rego Language in [OPA-reference](https://www.openpolicyagent.org/docs/latest/policy-reference/#built-in-functions)
@@ -28,9 +28,9 @@ allow{
     PermitMinVulnerability
 }
 ```
-If you are using your own rego files, then the **package** field should be "postee" and the result should be in the  **allow** function:
+If you are using your own rego files, then the **package** field should be "hooker" and the result should be in the  **allow** function:
 ```
-package postee
+package hooker
 
 your_function{...} # 0 or more your functions
 
@@ -58,9 +58,9 @@ input: |
   input.vulnerability_summary.critical>0
 ```
 
-## Postee Route Configuration
+## Hooker Route Configuration
 
-You could use Postee with any json. See the following example receiving json events:
+You could use Hooker with any json. See the following example receiving json events:
 
 ### Route All Messages
 To create a route that matches all messages, simply use the following:
@@ -82,19 +82,19 @@ routes:
   ...
 ```
 
-### Route Tracee Message
+### Route Tracker Message
 
-The following input JSON message is from [Tracee](https://github.com/aquasecurity/tracee).
+The following input JSON message is from [Tracker](https://github.com/khulnasoft-lab/tracker).
 
-Set `input` property of route to: `contains(input.SigMetadata.ID,"TRC-")` to limit the route to handle Tracee messages only
+Set `input` property of route to: `contains(input.SigMetadata.ID,"TRC-")` to limit the route to handle Tracker messages only
 
-In the section [rego-templates](https://github.com/aquasecurity/postee/tree/main/rego-templates) have rego templates samples to use with Tracee:
-- tracee-html.rego
-- tracee-slack.rego
+In the section [rego-templates](https://github.com/khulnasoft-lab/hooker/tree/main/rego-templates) have rego templates samples to use with Tracker:
+- tracker-html.rego
+- tracker-slack.rego
 
 ### Plugins
 
-'Plugins' section contains configuration for useful Postee features.
+'Plugins' section contains configuration for useful Hooker features.
 
 Key | Description | Possible Values | Example
 --- | --- | --- | ---

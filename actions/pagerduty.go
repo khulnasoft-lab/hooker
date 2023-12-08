@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/PagerDuty/go-pagerduty"
-	"github.com/aquasecurity/postee/v2/formatting"
-	"github.com/aquasecurity/postee/v2/layout"
+	"github.com/khulnasoft-lab/hooker/v2/formatting"
+	"github.com/khulnasoft-lab/hooker/v2/layout"
 )
 
 type Clock interface {
@@ -54,7 +54,7 @@ func (p *PagerdutyClient) Send(m map[string]string) error {
 		Action:     "trigger",
 		Payload: &pagerduty.V2Payload{
 			Summary:   m["title"], // required
-			Source:    "postee",
+			Source:    "hooker",
 			Severity:  "critical",
 			Timestamp: p.clock.Now().Format(time.RFC3339),
 			Details:   m["description"], // required

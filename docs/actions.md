@@ -1,23 +1,23 @@
 ## Motivation
-Proper alert management can help security practitioners make informed decisions about their codebase. However, security alerts can cause fatigue if acting on them isn’t possible. Postee, an open source security alert management tool, helps mitigate some of those concerns. It enables teams to define routes and rules by which alerts are handled and redirected to
+Proper alert management can help security practitioners make informed decisions about their codebase. However, security alerts can cause fatigue if acting on them isn’t possible. Hooker, an open source security alert management tool, helps mitigate some of those concerns. It enables teams to define routes and rules by which alerts are handled and redirected to
 
 ## User Stories
-In a typical Postee setup, users can configure the tool to receive events from a variety of sources over a webhook. This allows for ease of use in existing environments. Furthermore, users can configure Postee to process these incoming events and, based on logic defined via Rego rules, send them to different actions.
+In a typical Hooker setup, users can configure the tool to receive events from a variety of sources over a webhook. This allows for ease of use in existing environments. Furthermore, users can configure Hooker to process these incoming events and, based on logic defined via Rego rules, send them to different actions.
 
-As a **Postee User**
+As a **Hooker User**
 
-- _I want_, to be able to remove a vulnerable image from my cluster upon a Trivy scan  
+- _I want_, to be able to remove a vulnerable image from my cluster upon a Tunnel scan  
   _So that_, I can keep such images unavailable for deployment.
 
 
-- _I want_, to ship Tracee security notification logs from my node when events are detected   
+- _I want_, to ship Tracker security notification logs from my node when events are detected   
   _So that_, I can build a timelog for forensics purposes.
 
 
 - _I want_, to be able to add labels to my deployments when Starboard detects a vulnerable image in my cluster   
   _So that_, I can effectively tag my resources.
 
-![settings](img/postee-actions.png)
+![settings](img/hooker-actions.png)
 
 Actions are remote services that messages should be sent to. Each action has two mandatory fields, which are 'name' and 'type'.
 
@@ -58,7 +58,7 @@ Key           | Description          | Values | Required
 *token*       | User's Personal Access Token. Used only for Jira Server/Data Center   |             | No          
 *board*       | JIRA board key              |           | No
 *priority*    | ticket priority, e.g., High |           | No
-*assignee*    | comma separated list of users (emails) that will be assigned to ticket, e.g., ["john@yahoo.com"]. To assign a ticket to the Application Owner email address (as defined in Aqua Application Scope, owner email field), specify ["<%application_scope_owner%>"] as the assignee value   |               | No
+*assignee*    | comma separated list of users (emails) that will be assigned to ticket, e.g., ["john@yahoo.com"]. To assign a ticket to the Application Owner email address (as defined in Khulnasoft Application Scope, owner email field), specify ["<%application_scope_owner%>"] as the assignee value   |               | No
 *issuetype*   | issue type, e.g., Bug        |           | No
 *labels*      | comma separated list of labels that will be assigned to ticket, e.g., ["label1", "label2"]|         | No
 *sprint*      | Sprint name, e.g., "3.5 Sprint 8" |      | No
@@ -134,12 +134,12 @@ Key          | Description | Values | Required
 *host*       | SMTP host name |          | Yes
 *port*       | SMTP port      |          | Yes
 *sender*     |  Sender's email address   |           | Yes
-*recipients* |  Recipients (array of comma separated emails), e.g. ["john@yahoo.com"]. To send the email to the Application Owner email address (as defined in Aqua Application Scope, owner email field), specify ["<%application_scope_owner%>"] as the recipients value |         | Yes
+*recipients* |  Recipients (array of comma separated emails), e.g. ["john@yahoo.com"]. To send the email to the Application Owner email address (as defined in Khulnasoft Application Scope, owner email field), specify ["<%application_scope_owner%>"] as the recipients value |         | Yes
 
 ## Slack
 Getting the Slack webhooks [Create a Slack Custom App](https://api.slack.com/messaging/webhooks).
 
-Copy webhook url to the Postee config
+Copy webhook url to the Hooker config
 
 Key | Description | Values
 --- | --- | ---
@@ -215,7 +215,7 @@ Key                        | Description                    | Values  | Required
     See more details here: [Set up an integrated tool for Opsgenie](https://support.atlassian.com/opsgenie/docs/set-up-an-integrated-tool/).
 
 !!! caution
-    Postee requires an API key from an [API integration](https://support.atlassian.com/opsgenie/docs/what-is-a-default-api-integration/). This can be added under the Settings -> Integrations tab. Or it can under a team's Integrations tab.
+    Hooker requires an API key from an [API integration](https://support.atlassian.com/opsgenie/docs/what-is-a-default-api-integration/). This can be added under the Settings -> Integrations tab. Or it can under a team's Integrations tab.
 
     If the integration assigns an alert to a team, it can only create alerts for that team.
       
@@ -240,9 +240,9 @@ entity     | Entity field of the alert that is generally used to specify which d
  input-file  | custom shell script to executed                                                 | Yes
  exec-script | inline shell script executed                                                    | Yes
 
-The Exec Action also internally exposes the `$POSTEE_EVENT` environment variable with the input event that triggered the action. This can be helpful in situations where the event itself contains useful information.
+The Exec Action also internally exposes the `$HOOKER_EVENT` environment variable with the input event that triggered the action. This can be helpful in situations where the event itself contains useful information.
 
-Below is an example of using `$POSTEE_EVENT`. It uses the inline exec-script script:
+Below is an example of using `$HOOKER_EVENT`. It uses the inline exec-script script:
 
 ![img_3.png](img/img_3.png)
 
@@ -279,18 +279,18 @@ Below is an example of using `$POSTEE_EVENT`. It uses the inline exec-script scr
  docker-cmd           | Command to run inside the docker image.                                                                                                                        | Yes
  docker-env           | Environment variables to set in the container.                                                                                                                 | No
  docker-network       | Connect the action container to the specified network. {e.g. "host"}                                                                                           | No
- docker-volume-mounts | *Volume mounts present inside the container.<br/> * _If you have specified volume mounts, you also need to pass them through into the postee docker container_ | No
+ docker-volume-mounts | *Volume mounts present inside the container.<br/> * _If you have specified volume mounts, you also need to pass them through into the hooker docker container_ | No
 
 !!! note
-      When running Postee in a Docker container, it is required to mount the Docker socket within the Postee container to be able to spin up Docker Action container instances. This can be done as follows:
+      When running Hooker in a Docker container, it is required to mount the Docker socket within the Hooker container to be able to spin up Docker Action container instances. This can be done as follows:
       ```
-      docker run --rm --name=postee --group-add $(stat -c '%g' /var/run/docker.sock) -v /var/run/docker.sock:/var/run/docker.sock -v /path/to/cfg.yaml:/config/cfg.yaml  -e POSTEE_CFG=/config/cfg.yaml -e POSTEE_HTTP=0.0.0.0:8084     -e POSTEE_HTTPS=0.0.0.0:8444     -p 8084:8084 -p 8444:8444 aquasecurity/postee:latest
+      docker run --rm --name=hooker --group-add $(stat -c '%g' /var/run/docker.sock) -v /var/run/docker.sock:/var/run/docker.sock -v /path/to/cfg.yaml:/config/cfg.yaml  -e HOOKER_CFG=/config/cfg.yaml -e HOOKER_HTTP=0.0.0.0:8084     -e HOOKER_HTTPS=0.0.0.0:8444     -p 8084:8084 -p 8444:8444 khulnasoft-lab/hooker:latest
       ```
 
 !!! tip
-      If you have specified volume mounts for a docker container and use Postee in a docker container as well, remember to mount them within the Postee container as well:
+      If you have specified volume mounts for a docker container and use Hooker in a docker container as well, remember to mount them within the Hooker container as well:
       ```
-      docker run --rm --name=postee --group-add $(stat -c '%g' /var/run/docker.sock) -v /var/run/docker.sock:/var/run/docker.sock -v /path/to/cfg.yaml:/config/cfg.yaml  -v /my/custom/volume:/my/custom/volume -e POSTEE_CFG=/config/cfg.yaml -e POSTEE_HTTP=0.0.0.0:8084     -e POSTEE_HTTPS=0.0.0.0:8444     -p 8084:8084 -p 8444:8444 aquasecurity/postee:latest
+      docker run --rm --name=hooker --group-add $(stat -c '%g' /var/run/docker.sock) -v /var/run/docker.sock:/var/run/docker.sock -v /path/to/cfg.yaml:/config/cfg.yaml  -v /my/custom/volume:/my/custom/volume -e HOOKER_CFG=/config/cfg.yaml -e HOOKER_HTTP=0.0.0.0:8084     -e HOOKER_HTTPS=0.0.0.0:8444     -p 8084:8084 -p 8444:8444 khulnasoft-lab/hooker:latest
       ```
 
 
@@ -302,24 +302,24 @@ Key | Description | Values
 *timeout*  | Webhook timeout  |
 
 !!! tip
-The generic webhook action can be used for sending Postee output to any endpoint that can receive a request. You can find some interesting examples as part of the [Postee Blueprints](/blueprints)
+The generic webhook action can be used for sending Hooker output to any endpoint that can receive a request. You can find some interesting examples as part of the [Hooker Blueprints](/blueprints)
 
 ## DefectDojo
 
-DefectDojo is a DevOpsSec and vulnerability management tool. When sending a Trivy operator report, the API expects us to send a multipart/form-data POST request to the API endpoint. Authentication is done through an API token that can be easily provided by either environment variables or K8s secrets.
+DefectDojo is a DevOpsSec and vulnerability management tool. When sending a Tunnel operator report, the API expects us to send a multipart/form-data POST request to the API endpoint. Authentication is done through an API token that can be easily provided by either environment variables or K8s secrets.
 
-At the time of writing, Postee doesn't provide any native action module targeting the DefectDojo API. Instead the solution is to apply a shell script through an EXEC action that consumes the JSON output of a custom made REGO template that mangles the JSON payload received from a Trivy operator instance.
+At the time of writing, Hooker doesn't provide any native action module targeting the DefectDojo API. Instead the solution is to apply a shell script through an EXEC action that consumes the JSON output of a custom made REGO template that mangles the JSON payload received from a Tunnel operator instance.
 
 The REGO template will be use-case specific because the metadata added heavily depends on the users setup and hierarchical structure inside the user's DefectDojo instance.
 
-The resulting JSON data puts the Trivy report under the `report` key and derived meta data under the `metadata` key. The idea behind this is to provide a data structure that will make it easy to develop a more generic shell script. In a subsequent step an EXEC module is called consuming the resulting JSON structure from an environment variable called `POSTEE_EVENT`. For more information see the [EXEC action](#Exec).
+The resulting JSON data puts the Tunnel report under the `report` key and derived meta data under the `metadata` key. The idea behind this is to provide a data structure that will make it easy to develop a more generic shell script. In a subsequent step an EXEC module is called consuming the resulting JSON structure from an environment variable called `HOOKER_EVENT`. For more information see the [EXEC action](#Exec).
 
 ### Implementation
 
 1. DefectDojo - create an non-interactive API user and an API token
-2. Postee - deploy the token as `DEFECTDOJO_API_TOKEN` environment variable
-3. Postee - deploy the base URL for DefectDojo using `DEFECTDOJO_URL`
+2. Hooker - deploy the token as `DEFECTDOJO_API_TOKEN` environment variable
+3. Hooker - deploy the base URL for DefectDojo using `DEFECTDOJO_URL`
 4. Mount the [example shell script](../actions/example/exec/defectdojo-curl-upload-scan.sh) into the container
-5. Mount the [example rego template](../rego-templates/example/defectdojo/trivy-operator-defectdojo.rego) into the container
-6. Update your configuration according to the [example](../config/cfg-trivy-operator-defectdojo.yaml) provided
-7. Validate the setup by sending an example report in JSON format using the following shell command `curl -X POST -H "Content-Type: application/json" -d @trivy-operator-report.json http://postee:8082`
+5. Mount the [example rego template](../rego-templates/example/defectdojo/tunnel-operator-defectdojo.rego) into the container
+6. Update your configuration according to the [example](../config/cfg-tunnel-operator-defectdojo.yaml) provided
+7. Validate the setup by sending an example report in JSON format using the following shell command `curl -X POST -H "Content-Type: application/json" -d @tunnel-operator-report.json http://hooker:8082`

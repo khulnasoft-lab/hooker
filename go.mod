@@ -1,11 +1,10 @@
-module github.com/aquasecurity/postee/v2
+module github.com/khulnasoft-lab/hooker/v2
 
 go 1.18
 
 require (
 	github.com/DependencyTrack/client-go v0.11.0
 	github.com/PagerDuty/go-pagerduty v1.5.1
-	github.com/aquasecurity/go-jira v0.0.0-20230705211506-0cd878ce5449
 	github.com/aws/aws-sdk-go-v2 v1.16.11
 	github.com/aws/aws-sdk-go-v2/config v1.17.1
 	github.com/aws/aws-sdk-go-v2/service/securityhub v1.22.7
@@ -14,6 +13,7 @@ require (
 	github.com/ghodss/yaml v1.0.0
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
+	github.com/khulnasoft-lab/go-jira v0.0.0-20230817162545-9cc5eaa28404
 	github.com/nats-io/nats-server/v2 v2.7.4
 	github.com/nats-io/nats.go v1.13.1-0.20220308171302-2f2f6968e98d
 	github.com/nats-io/nkeys v0.3.0

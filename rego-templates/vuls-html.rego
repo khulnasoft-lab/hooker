@@ -1,7 +1,7 @@
-package postee.vuls.html
+package hooker.vuls.html
 
-import data.postee.by_flag
-import data.postee.with_default
+import data.hooker.by_flag
+import data.hooker.with_default
 
 #import common.by_flag
 ################################################ Templates ################################################
@@ -153,20 +153,20 @@ vln_list(severity) = vlnrb {
                     resource_name = with_default(resource, "name", "none")
                     resource_version = with_default(resource, "version", "none")
 
-                    item.vulnerabilities[j].aqua_severity == severity # only items with severity matched
+                    item.vulnerabilities[j].khulnasoft_severity == severity # only items with severity matched
                     r := [vlnname, resource_name, resource_version, fxvrsn]
               ]
 }
 ###########################################################################################################
-postee := with_default(input, "postee", {})
-aqua_server := with_default(postee, "AquaServer", "")
+hooker := with_default(input, "hooker", {})
+khulnasoft_server := with_default(hooker, "KhulnasoftServer", "")
 
 title = sprintf("%s vulnerability scan report", [input.image])
-href := sprintf("%s%s/%s", [aqua_server, urlquery.encode(input.registry), urlquery.encode(input.image)])
-text := sprintf("%s%s/%s", [aqua_server, input.registry, input.image])
-url := by_flag("", href, aqua_server == "")
+href := sprintf("%s%s/%s", [khulnasoft_server, urlquery.encode(input.registry), urlquery.encode(input.image)])
+text := sprintf("%s%s/%s", [khulnasoft_server, input.registry, input.image])
+url := by_flag("", href, khulnasoft_server == "")
 
-aggregation_pkg := "postee.vuls.html.aggregation"
+aggregation_pkg := "hooker.vuls.html.aggregation"
 result = msg {
 
     msg := sprintf(tpl, [
@@ -199,6 +199,6 @@ result = msg {
     by_flag(
      "", 
      sprintf(`<p>See more: <a href='%s'>%s</a></p>`,[href, text]), #link
-     aqua_server == "")
+     khulnasoft_server == "")
     ])
 }

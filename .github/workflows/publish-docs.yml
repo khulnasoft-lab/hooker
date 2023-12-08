@@ -1,6 +1,6 @@
 ---
 # This is a manually triggered workflow to build and publish the MkDocs from the
-# specified Git revision to GitHub pages on https://aquasecurity.github.io/postee
+# specified Git revision to GitHub pages on https://khulnasoft-lab.github.io/hooker
 name: Publish Documentation
 
 on:
@@ -30,14 +30,14 @@ jobs:
       with:
         python-version: 3.x
     - run: |
-        pip install git+https://${GH_TOKEN}@github.com/squidfunk/mkdocs-material-insiders.git
+        pip install git+https://${GH_TOKEN}@github.com/squidfunk/mkdocs-material.git
         pip install mike
         pip install mkdocs-macros-plugin
       env:
         # Note: It is not the same as ${{ secrets.GITHUB_TOKEN }} !
-        GH_TOKEN: ${{ secrets.MKDOCS_AQUA_BOT }}
+        GH_TOKEN: ${{ secrets.MKDOCS_KHULNASOFT_BOT }}
     - run: |
-        git config user.name "aqua-bot"
-        git config user.email "aqua-bot@users.noreply.github.com"
+        git config user.name "khulnasoft-bot"
+        git config user.email "khulnasoft-bot@users.noreply.github.com"
     - run: |
         mike deploy --push --update-aliases ${{ github.event.inputs.ref }} latest

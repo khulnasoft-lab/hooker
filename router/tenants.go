@@ -1,11 +1,11 @@
 package router
 
 import (
-	"github.com/aquasecurity/postee/v2/routes"
+	"github.com/khulnasoft-lab/hooker/v2/routes"
 )
 
 type TenantSettings struct {
-	AquaServer      string              `json:"aqua-server,omitempty"`
+	KhulnasoftServer      string              `json:"khulnasoft-server,omitempty"`
 	DBMaxSize       string              `json:"max-db-size,omitempty"`
 	DBRemoveOldData int                 `json:"delete-old-data,omitempty"`
 	DBTestInterval  int                 `json:"db-verify-interval,omitempty"`

@@ -15,7 +15,7 @@ aggregation_pkg:="rego1.aggr"
 `
 	aggregationRego = `
 package rego1.aggr
-import data.postee.flat_array
+import data.hooker.flat_array
 
 
 title := "Vulnerability scan report"
@@ -30,7 +30,7 @@ result := res {
 }
 `
 
-	commonRego = `package postee
+	commonRego = `package hooker
 flat_array(a) = o {
 	o:=[item |
 		item:=a[_][_]

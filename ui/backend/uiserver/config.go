@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"os"
 
-	hookDbService "github.com/aquasecurity/postee/v2/dbservice"
-	"github.com/aquasecurity/postee/v2/router"
+	hookDbService "github.com/khulnasoft-lab/hooker/v2/dbservice"
+	"github.com/khulnasoft-lab/hooker/v2/router"
 )
 
 func (srv *uiServer) getConfig(w http.ResponseWriter, r *http.Request) {
@@ -73,8 +73,8 @@ func (srv *uiServer) updateConfig(w http.ResponseWriter, r *http.Request) {
 	err = reloadWebhookCfg(srv.webhookUrl, apikey)
 
 	if err != nil {
-		log.Printf("Unable to reach Postee backend %v", err)
-		http.Error(w, "Unable to reach Postee backend", http.StatusBadRequest)
+		log.Printf("Unable to reach Hooker backend %v", err)
+		http.Error(w, "Unable to reach Hooker backend", http.StatusBadRequest)
 		return
 	}
 }

@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"log"
 
-	"github.com/aquasecurity/postee/v2/formatting"
-	"github.com/aquasecurity/postee/v2/layout"
-	"github.com/aquasecurity/postee/v2/utils"
+	"github.com/khulnasoft-lab/hooker/v2/formatting"
+	"github.com/khulnasoft-lab/hooker/v2/layout"
+	"github.com/khulnasoft-lab/hooker/v2/utils"
 
-	msteams "github.com/aquasecurity/postee/v2/teams"
+	msteams "github.com/khulnasoft-lab/hooker/v2/teams"
 )
 
 const (
@@ -17,7 +17,7 @@ const (
 
 type TeamsAction struct {
 	Name        string
-	AquaServer  string
+	KhulnasoftServer  string
 	teamsLayout layout.LayoutProvider
 	Webhook     string
 }
@@ -43,7 +43,7 @@ func (teams *TeamsAction) Send(input map[string]string) error {
 	var body string
 	if len(input["description"]) > teamsSizeLimit {
 		utils.Debug("MS Team action will send SHORT message\n")
-		body = buildShortMessage(teams.AquaServer, input["url"], teams.teamsLayout)
+		body = buildShortMessage(teams.KhulnasoftServer, input["url"], teams.teamsLayout)
 	} else {
 		utils.Debug("MS Team action will send LONG message\n")
 		body = input["description"]

@@ -40,7 +40,7 @@ export default new Vuex.Store({
                 // console.log(data.rules)
                 const settings = {
                     name: data.name,
-                    AquaServer: data.AquaServer,
+                    KhulnasoftServer: data.KhulnasoftServer,
                     Delete_Old_Data: data.Delete_Old_Data,
                     DbVerifyInterval: data.DbVerifyInterval,
                     Max_DB_Size: data.Max_DB_Size

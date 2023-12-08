@@ -12,7 +12,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/aquasecurity/postee/v2/layout"
+	"github.com/khulnasoft-lab/hooker/v2/layout"
 	"github.com/tidwall/gjson"
 )
 
@@ -48,7 +48,7 @@ func (hc HTTPClient) Send(m map[string]string) error {
 		return fmt.Errorf("unable to initialize http request err: %w", err)
 	}
 
-	req.Header.Add("Postee-Event", pe) // preserve and transmit postee header
+	req.Header.Add("Hooker-Event", pe) // preserve and transmit hooker header
 	for k, vals := range hc.Headers {
 		for _, val := range vals {
 			req.Header.Add(k, val)

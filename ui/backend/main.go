@@ -4,17 +4,17 @@ import (
 	"log"
 	"os"
 
-	"github.com/aquasecurity/postee/ui/backend/uiserver"
+	"github.com/khulnasoft-lab/hooker/ui/backend/uiserver"
 )
 
 const (
-	ENV_FILELOG        = "POSTEE_UI_LOGFILE"
-	ENV_CFG            = "POSTEE_UI_CFG"
-	ENV_WEB            = "POSTEE_UI_WEB"
-	ENV_UPDATE_URL     = "POSTEE_UI_UPDATE_URL"
-	ENV_PORT           = "POSTEE_UI_PORT"
-	ENV_ADMIN_USER     = "POSTEE_ADMIN_USER"
-	ENV_ADMIN_PASSWORD = "POSTEE_ADMIN_PASSWORD"
+	ENV_FILELOG        = "HOOKER_UI_LOGFILE"
+	ENV_CFG            = "HOOKER_UI_CFG"
+	ENV_WEB            = "HOOKER_UI_WEB"
+	ENV_UPDATE_URL     = "HOOKER_UI_UPDATE_URL"
+	ENV_PORT           = "HOOKER_UI_PORT"
+	ENV_ADMIN_USER     = "HOOKER_ADMIN_USER"
+	ENV_ADMIN_PASSWORD = "HOOKER_ADMIN_PASSWORD"
 
 	DEFAULT_WEB_PATH = "/uiserver/www"
 )
@@ -41,7 +41,7 @@ func main() {
 	}
 	updateUrl := os.Getenv(ENV_UPDATE_URL)
 	if updateUrl == "" {
-		log.Printf("WARNING! Using an empty update url, UI won't restart your Postee instance with a saved configuration. You can change it via %q environment variable.", ENV_UPDATE_URL)
+		log.Printf("WARNING! Using an empty update url, UI won't restart your Hooker instance with a saved configuration. You can change it via %q environment variable.", ENV_UPDATE_URL)
 	}
 
 	port := os.Getenv(ENV_PORT)

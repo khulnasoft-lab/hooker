@@ -7,9 +7,9 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/aquasecurity/postee/v2/formatting"
+	"github.com/khulnasoft-lab/hooker/v2/formatting"
 
-	"github.com/aquasecurity/postee/v2/layout"
+	"github.com/khulnasoft-lab/hooker/v2/layout"
 )
 
 type execCmd = func(string, ...string) *exec.Cmd
@@ -35,7 +35,7 @@ func (e *ExecClient) Init() error {
 func (e *ExecClient) Send(m map[string]string) error {
 	envVars := os.Environ()
 	envVars = append(envVars, e.Env...)
-	envVars = append(envVars, fmt.Sprintf("POSTEE_EVENT=%s", m["description"]))
+	envVars = append(envVars, fmt.Sprintf("HOOKER_EVENT=%s", m["description"]))
 
 	var cmd *exec.Cmd
 	if len(e.InputFile) > 0 {

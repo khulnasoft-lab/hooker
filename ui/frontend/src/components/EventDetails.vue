@@ -1,7 +1,7 @@
 <template>
   <div id="event-list">
     <div class="card-header"><h3>Events</h3></div>
-    <div class="card-body">All incoming events that Postee has received so far.</div>
+    <div class="card-body">All incoming events that Hooker has received so far.</div>
     <json-viewer
         :value="events"
         :expand-depth=3

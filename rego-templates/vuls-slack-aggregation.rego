@@ -1,6 +1,6 @@
-package postee.vuls.slack.aggregation
+package hooker.vuls.slack.aggregation
 
-import data.postee.flat_array
+import data.hooker.flat_array
 
 
 title := "Vulnerability scan report"

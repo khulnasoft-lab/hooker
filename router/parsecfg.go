@@ -15,8 +15,8 @@ const (
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-  Options supported only in Postee V1 are found in %s. Please make sure app is configured correctly!
-  See https://github.com/aquasecurity/postee/blob/main/README.md for the details.
+  Options supported only in Hooker V1 are found in %s. Please make sure app is configured correctly!
+  See https://github.com/khulnasoft-lab/hooker/blob/main/README.md for the details.
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 

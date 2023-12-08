@@ -1,30 +1,30 @@
 # Paging DevOps Teams
 
 ## Introduction
-In this walkthrough, we will setup vulnerability scanning with [Trivy](https://github.com/aquasecurity/trivy) and send the results to Postee for paging DevOps team members for critical vulnerabilities as they are introduced.
+In this walkthrough, we will setup vulnerability scanning with [Tunnel](https://github.com/khulnasoft/tunnel) and send the results to Hooker for paging DevOps team members for critical vulnerabilities as they are introduced.
 
 ## Scenario
-A DevOps team would like to configure alerts for scheduled vulnerability scans to notify them about any vulnerable images that they might be running in their clusters. For this they decide to install Trivy, run it on a schedule and send the results to Postee.
+A DevOps team would like to configure alerts for scheduled vulnerability scans to notify them about any vulnerable images that they might be running in their clusters. For this they decide to install Tunnel, run it on a schedule and send the results to Hooker.
 
-They decide to configure Postee so that upon receiving such alerts, Postee sends an event to PagerDuty which fires off an alert to inform DevOps teams to take necessary action. 
+They decide to configure Hooker so that upon receiving such alerts, Hooker sends an event to PagerDuty which fires off an alert to inform DevOps teams to take necessary action. 
 
-![img.png](assets/trivy-pagerduty.png)
+![img.png](assets/tunnel-pagerduty.png)
 
 ## Sample Configs
 In this case a sample configuration for the components can be described as follows:
 
-### Postee Config
+### Hooker Config
 ```yaml
 routes:
-- name: Trivy Alerts to Pagerduty
+- name: Tunnel Alerts to Pagerduty
   input: input.report.summary.criticalCount > 0
   actions: [alert-devops]
-  template: trivy-raw-json
+  template: tunnel-raw-json
 
 # Templates are used to format a message
 templates:
-- name: trivy-raw-json
-  rego-package: postee.rawmessage.json
+- name: tunnel-raw-json
+  rego-package: hooker.rawmessage.json
 
 # Actions are target services that should consume the messages
 actions:

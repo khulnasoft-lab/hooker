@@ -57,13 +57,13 @@ var (
 						"name": "CVE-2018-20679",
 						"version": "",
 						"fix_version": "",
-						"aqua_severity": "medium"
+						"khulnasoft_severity": "medium"
 					},
 					{
 						"name": "CVE-2019-5747",
 						"version": "",
 						"fix_version": "",
-						"aqua_severity": "medium"
+						"khulnasoft_severity": "medium"
 					}
 				],
 				"resource": {

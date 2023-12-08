@@ -18,8 +18,8 @@ const GoodFindings = `{
    {
      "SchemaVersion": "2018-10-08",
      "Id": "alpine:3.10 (alpine 3.10.9)/CVE-2021-36159",
-     "ProductArn": "arn:aws:securityhub:eu-west-2::product/aquasecurity/aquasecurity",
-     "GeneratorId": "Trivy/CVE-2021-36159",
+     "ProductArn": "arn:aws:securityhub:eu-west-2::product/khulnasoft-lab/khulnasoft-lab",
+     "GeneratorId": "Tunnel/CVE-2021-36159",
      "AwsAccountId": "000000",
      "Types": [
        "Software and Configuration Checks/Vulnerabilities/CVE"
@@ -29,16 +29,16 @@ const GoodFindings = `{
      "Severity": {
        "Label": "CRITICAL"
      },
-     "Title": "Trivy found a vulnerability to CVE-2021-36159 in container alpine:3.10 (alpine 3.10.9)",
+     "Title": "Tunnel found a vulnerability to CVE-2021-36159 in container alpine:3.10 (alpine 3.10.9)",
      "Description": "libfetch before 2021-07-26, as used in apk-tools, xbps, and other products, mishandles numeric strings for the FTP and HTTP protocols. The FTP passive mode implementation allows an out-of-bounds read because strtol is used to parse the relevant numbers into address bytes. It does not check if the line ends prematurely. If it does, the for-loop condition checks for the &#39;\\0&#39; terminator one byte too late.",
      "Remediation": {
        "Recommendation": {
          "Text": "More information on this vulnerability is provided in the hyperlink",
-         "Url": "https://avd.aquasec.com/nvd/cve-2021-36159"
+         "Url": "https://avd.khulnasoft.com/nvd/cve-2021-36159"
        }
      },
      "ProductFields": {
-       "Product Name": "Trivy"
+       "Product Name": "Tunnel"
      },
      "Resources": [
        {
@@ -69,8 +69,8 @@ const GoodFindings = `{
    {
      "SchemaVersion": "2018-10-08",
      "Id": "alpine:3.10 (alpine 3.10.9)/CVE-2021-36159",
-     "ProductArn": "arn:aws:securityhub:eu-west-2::product/aquasecurity/aquasecurity",
-     "GeneratorId": "Trivy/CVE-2021-36159",
+     "ProductArn": "arn:aws:securityhub:eu-west-2::product/khulnasoft-lab/khulnasoft-lab",
+     "GeneratorId": "Tunnel/CVE-2021-36159",
      "AwsAccountId": "000000",
      "Types": [
        "Software and Configuration Checks/Vulnerabilities/CVE"
@@ -80,16 +80,16 @@ const GoodFindings = `{
      "Severity": {
        "Label": "CRITICAL"
      },
-     "Title": "Trivy found a vulnerability to CVE-2021-36159 in container alpine:3.10 (alpine 3.10.9)",
+     "Title": "Tunnel found a vulnerability to CVE-2021-36159 in container alpine:3.10 (alpine 3.10.9)",
      "Description": "libfetch before 2021-07-26, as used in apk-tools, xbps, and other products, mishandles numeric strings for the FTP and HTTP protocols. The FTP passive mode implementation allows an out-of-bounds read because strtol is used to parse the relevant numbers into address bytes. It does not check if the line ends prematurely. If it does, the for-loop condition checks for the &#39;\\0&#39; terminator one byte too late.",
      "Remediation": {
        "Recommendation": {
          "Text": "More information on this vulnerability is provided in the hyperlink",
-         "Url": "https://avd.aquasec.com/nvd/cve-2021-36159"
+         "Url": "https://avd.khulnasoft.com/nvd/cve-2021-36159"
        }
      },
      "ProductFields": {
-       "Product Name": "Trivy"
+       "Product Name": "Tunnel"
      },
      "Resources": [
        {
@@ -164,12 +164,12 @@ func TestAWSSecurityHubClient_Send(t *testing.T) {
 			},
 		}
 
-		require.Equal(t, "trivy AWS sent no findings to Postee, skipping sending", ac.Send(map[string]string{
+		require.Equal(t, "tunnel AWS sent no findings to Hooker, skipping sending", ac.Send(map[string]string{
 			"description": `{"Findings":[]}`,
 		}).Error(), t.Name())
 	})
 
-	t.Run("sad path, bad incoming event from trivy", func(t *testing.T) {
+	t.Run("sad path, bad incoming event from tunnel", func(t *testing.T) {
 		require.Equal(t, "AWS Security Hub unmarshalling failed: invalid character 'i' looking for beginning of value", AWSSecurityHubClient{}.Send(map[string]string{
 			"description": "invalid json",
 		}).Error())

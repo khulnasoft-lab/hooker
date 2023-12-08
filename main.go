@@ -9,13 +9,13 @@ import (
 	"runtime"
 	"syscall"
 
-	"github.com/aquasecurity/postee/v2/controller"
+	"github.com/khulnasoft-lab/hooker/v2/controller"
 
-	"github.com/aquasecurity/postee/v2/dbservice"
-	"github.com/aquasecurity/postee/v2/router"
-	"github.com/aquasecurity/postee/v2/runner"
-	"github.com/aquasecurity/postee/v2/utils"
-	"github.com/aquasecurity/postee/v2/webserver"
+	"github.com/khulnasoft-lab/hooker/v2/dbservice"
+	"github.com/khulnasoft-lab/hooker/v2/router"
+	"github.com/khulnasoft-lab/hooker/v2/runner"
+	"github.com/khulnasoft-lab/hooker/v2/utils"
+	"github.com/khulnasoft-lab/hooker/v2/webserver"
 	"github.com/spf13/cobra"
 )
 
@@ -49,8 +49,8 @@ var (
 
 var rootCmd = &cobra.Command{
 	Use:   "webhooksrv",
-	Short: fmt.Sprintf("Aqua Container Security Webhook server\n"),
-	Long:  fmt.Sprintf("Aqua Container Security Webhook server\n"),
+	Short: fmt.Sprintf("Khulnasoft Container Security Webhook server\n"),
+	Long:  fmt.Sprintf("Khulnasoft Container Security Webhook server\n"),
 }
 
 func init() {
@@ -58,18 +58,18 @@ func init() {
 	rootCmd.Flags().StringVar(&tls, "tls", TLS, TLS_USAGE)
 	rootCmd.Flags().StringVar(&cfgfile, "cfgfile", CFG_FILE, CFG_USAGE)
 
-	rootCmd.Flags().BoolVar(&controllerMode, "controller-mode", false, "run postee in controller mode")
-	rootCmd.Flags().StringVar(&controllerURL, "controller-url", "", "postee controller URL")
-	rootCmd.Flags().StringVar(&controllerCARootPath, "controller-ca-root", "", "postee controller ca root file")
-	rootCmd.Flags().StringVar(&controllerTLSCertPath, "controller-tls-cert", "", "postee controller TLS cert file")
-	rootCmd.Flags().StringVar(&controllerTLSKeyPath, "controller-tls-key", "", "postee controller TLS key file")
-	rootCmd.Flags().StringVar(&controllerSeedFilePath, "controller-seed-file", "", "postee controller AuthN seed file")
+	rootCmd.Flags().BoolVar(&controllerMode, "controller-mode", false, "run hooker in controller mode")
+	rootCmd.Flags().StringVar(&controllerURL, "controller-url", "", "hooker controller URL")
+	rootCmd.Flags().StringVar(&controllerCARootPath, "controller-ca-root", "", "hooker controller ca root file")
+	rootCmd.Flags().StringVar(&controllerTLSCertPath, "controller-tls-cert", "", "hooker controller TLS cert file")
+	rootCmd.Flags().StringVar(&controllerTLSKeyPath, "controller-tls-key", "", "hooker controller TLS key file")
+	rootCmd.Flags().StringVar(&controllerSeedFilePath, "controller-seed-file", "", "hooker controller AuthN seed file")
 
-	rootCmd.Flags().StringVar(&runnerName, "runner-name", "", "postee runner name")
-	rootCmd.Flags().StringVar(&runnerCARootPath, "runner-ca-root", "", "postee runner ca root file")
-	rootCmd.Flags().StringVar(&runnerTLSCertPath, "runner-tls-cert", "", "postee runner tls cert file")
-	rootCmd.Flags().StringVar(&runnerTLSKeyPath, "runner-tls-key", "", "postee runner tls key file")
-	rootCmd.Flags().StringVar(&runnerSeedFilePath, "runner-seed-file", "", "postee runner AuthN seed file")
+	rootCmd.Flags().StringVar(&runnerName, "runner-name", "", "hooker runner name")
+	rootCmd.Flags().StringVar(&runnerCARootPath, "runner-ca-root", "", "hooker runner ca root file")
+	rootCmd.Flags().StringVar(&runnerTLSCertPath, "runner-tls-cert", "", "hooker runner tls cert file")
+	rootCmd.Flags().StringVar(&runnerTLSKeyPath, "runner-tls-key", "", "hooker runner tls key file")
+	rootCmd.Flags().StringVar(&runnerSeedFilePath, "runner-seed-file", "", "hooker runner AuthN seed file")
 }
 
 func main() {
@@ -81,10 +81,10 @@ func main() {
 
 		if runnerName != "" {
 			if controllerMode {
-				log.Fatal("postee cannot run as a controller when running in runner mode")
+				log.Fatal("hooker cannot run as a controller when running in runner mode")
 			}
 
-			f, err := ioutil.TempFile("", "temp-postee-config-*") // TODO: Find a better way
+			f, err := ioutil.TempFile("", "temp-hooker-config-*") // TODO: Find a better way
 			if err != nil {
 				log.Fatal("Unable to create temp file for runner config on disk: ", err)
 			}
@@ -107,7 +107,7 @@ func main() {
 
 		if controllerMode {
 			if runnerName != "" {
-				log.Fatal("postee cannot run as a runner when running in controller mode")
+				log.Fatal("hooker cannot run as a runner when running in controller mode")
 			}
 
 			ctr := controller.Controller{
@@ -123,28 +123,28 @@ func main() {
 			}
 		}
 
-		if os.Getenv("AQUAALERT_URL") != "" {
-			url = os.Getenv("AQUAALERT_URL")
+		if os.Getenv("KHULNASOFTALERT_URL") != "" {
+			url = os.Getenv("KHULNASOFTALERT_URL")
 		}
 
-		if os.Getenv("POSTEE_HTTP") != "" {
-			url = os.Getenv("POSTEE_HTTP")
+		if os.Getenv("HOOKER_HTTP") != "" {
+			url = os.Getenv("HOOKER_HTTP")
 		}
 
-		if os.Getenv("AQUAALERT_TLS") != "" {
-			tls = os.Getenv("AQUAALERT_TLS")
+		if os.Getenv("KHULNASOFTALERT_TLS") != "" {
+			tls = os.Getenv("KHULNASOFTALERT_TLS")
 		}
 
-		if os.Getenv("POSTEE_HTTPS") != "" {
-			tls = os.Getenv("POSTEE_HTTPS")
+		if os.Getenv("HOOKER_HTTPS") != "" {
+			tls = os.Getenv("HOOKER_HTTPS")
 		}
 
-		if os.Getenv("AQUAALERT_CFG") != "" {
-			cfgfile = os.Getenv("AQUAALERT_CFG")
+		if os.Getenv("KHULNASOFTALERT_CFG") != "" {
+			cfgfile = os.Getenv("KHULNASOFTALERT_CFG")
 		}
 
-		if os.Getenv("POSTEE_CFG") != "" {
-			cfgfile = os.Getenv("POSTEE_CFG")
+		if os.Getenv("HOOKER_CFG") != "" {
+			cfgfile = os.Getenv("HOOKER_CFG")
 		}
 
 		if os.Getenv("PATH_TO_DB") != "" {

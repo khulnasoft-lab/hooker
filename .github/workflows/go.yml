@@ -39,22 +39,22 @@ jobs:
       - name: Run Integration Tests
         run: make test-integration
 
-      - name: Run Trivy vulnerability scanner in repo mode
+      - name: Run Tunnel vulnerability scanner in repo mode
         uses: aquasecurity/trivy-action@0.11.0
         with:
           scan-type: 'fs'
           ignore-unfixed: true
           format: 'sarif'
-          output: 'trivy-results.sarif'
+          output: 'tunnel-results.sarif'
           severity: 'CRITICAL'
           exit-code: 0
 
-      - name: Upload Trivy scan results to GitHub Security tab
+      - name: Upload Tunnel scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: 'trivy-results.sarif'
+          sarif_file: 'tunnel-results.sarif'
       
-      - name: Run Trivy vulnerability scanner in IaC mode
+      - name: Run Tunnel vulnerability scanner in IaC mode
         uses: aquasecurity/trivy-action@0.11.0
         with:
           scan-type: 'config'

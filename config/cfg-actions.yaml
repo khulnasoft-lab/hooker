@@ -2,9 +2,9 @@
 # routes, templates and actions sections.
 
 name: tenant            #  The tenant name
-aqua-server: localhost           #  URL of Aqua Server for links. E.g. https://myserver.aquasec.com
+khulnasoft-server: localhost           #  URL of Khulnasoft Server for links. E.g. https://myserver.khulnasoft.com
 max-db-size: 1000MB       #  Max size of DB. <numbers><unit suffix> pattern is used, such as "300MB" or "1GB". If empty or 0 then unlimited
-db-verify-interval: 1   #  How often to check the DB size. By default, Postee checks every 1 hour
+db-verify-interval: 1   #  How often to check the DB size. By default, Hooker checks every 1 hour
 
 # Routes are used to define how to handle an incoming message
 routes:
@@ -21,7 +21,7 @@ routes:
 # Templates are used to format a message
 templates:
 - name: raw-json                        # route message "As Is" to external webhook
-  rego-package: postee.rawmessage.json
+  rego-package: hooker.rawmessage.json
 
 # Outputs are target services that should consume the messages
 actions:
@@ -36,7 +36,7 @@ actions:
   env: ["MY_ENV_VAR=foo_bar_baz", "MY_KEY=secret"]     # Optional. Any environment variables to pass in
   exec-script: |                                       # Specify the script to run
     #!/bin/sh
-    echo $POSTEE_EVENT
+    echo $HOOKER_EVENT
 
 - name: my-exec-2
   type: exec

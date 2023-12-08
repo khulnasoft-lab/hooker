@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	module = `package postee
+	module = `package hooker
 
 default allow = false
 
@@ -48,7 +48,7 @@ func buildRegoLoader(files []string, rule string) func(r *rego.Rego) {
 		return rego.Load(filesWithPath, nil)
 	}
 
-	return rego.Module("postee.rego", fmt.Sprintf(module, rule))
+	return rego.Module("hooker.rego", fmt.Sprintf(module, rule))
 }
 func IsUsedRegoFiles(files []string) bool {
 	return len(files) != 0 && files[0] != ""
@@ -61,7 +61,7 @@ func DoesMatchRegoCriteria(input interface{}, files []string, rule string) (bool
 	ctx := context.Background()
 
 	r := rego.New(
-		rego.Query("x = data.postee.allow"),
+		rego.Query("x = data.hooker.allow"),
 		buildRegoLoader(files, rule),
 	)
 

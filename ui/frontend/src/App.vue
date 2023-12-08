@@ -2,7 +2,7 @@
 
   <div id="app">
     <b-navbar toggleable="lg" type="dark" variant="primary" class="navbar-expand-lg mb-3">
-      <b-navbar-brand href="#">Postee</b-navbar-brand>
+      <b-navbar-brand href="#">Hooker</b-navbar-brand>
     </b-navbar>
 
     <div>
@@ -154,7 +154,7 @@ export default {
         },
         {
           target: "",
-          content: `You did it! Browse full docs at: <a href="https://aquasecurity.github.io/postee/latest/" target="_blank">Postee Docs</a>`
+          content: `You did it! Browse full docs at: <a href="https://khulnasoft-lab.github.io/hooker/latest/" target="_blank">Hooker Docs</a>`
         }
       ]
     };

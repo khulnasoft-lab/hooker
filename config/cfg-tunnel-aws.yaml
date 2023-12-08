@@ -1,0 +1,17 @@
+actions:
+  - type: awssecurityhub
+    enable: true
+    name: Send Findings to Security Hub
+routes:
+  - name: Send Tunnel Findings to AWS Security Hub
+    template: raw-json
+    actions:
+      - Send Findings to Security Hub
+    input-files:
+      - Tunnel AWS Findings
+templates:
+  - name: raw-json
+    rego-package: hooker.rawmessage.json
+rules:
+  - name: Tunnel AWS Findings
+name: Send Tunnel Results to AWS Security Hub

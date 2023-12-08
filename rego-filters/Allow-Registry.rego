@@ -1,7 +1,7 @@
-package postee
+package hooker
 
 
-ArrayPermitedRegistry := {"Aqua"} #The list of registry name that triggers the integration.
+ArrayPermitedRegistry := {"Khulnasoft"} #The list of registry name that triggers the integration.
 
 default PermitRegistry = false
 PermitRegistry = true{ 

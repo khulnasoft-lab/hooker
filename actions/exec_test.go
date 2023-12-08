@@ -45,7 +45,7 @@ func TestExecClient_Send(t *testing.T) {
 		defer func() { os.RemoveAll(f.Name()) }()
 		_, _ = f.WriteString(`#!/bin/sh
 echo "foo"
-echo $POSTEE_EVENT
+echo $HOOKER_EVENT
 echo $INPUT_ENV`)
 
 		ec := ExecClient{

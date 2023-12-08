@@ -1,4 +1,4 @@
-package postee
+package hooker
 
 #Trigger the integration only if image has a vulnerability with fix available (true). 
 #If set to false, integration will be triggered even if all vulnerabilities has no fix available

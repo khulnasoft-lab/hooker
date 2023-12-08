@@ -7,7 +7,7 @@ actions:
     name: Kill Process
     enable: true
     input-file: ''
-    exec-script: kill -9 $(echo $POSTEE_EVENT | jq .Context.hostParentProcessId)
+    exec-script: kill -9 $(echo $HOOKER_EVENT | jq .Context.hostParentProcessId)
 routes:
   - name: Notify on unauthorized access
     actions:
@@ -29,12 +29,12 @@ routes:
     template: raw-json
 templates:
   - name: raw-json
-    rego-package: postee.rawmessage.json
+    rego-package: hooker.rawmessage.json
 rules:
   - name: Initial Access
   - name: Credential Access
   - name: Privilege Escalation
   - name: Defense Evasion
   - name: Persistence
-  - name: Tracee Default Set
+  - name: Tracker Default Set
 name: Terminating Malicious Pods

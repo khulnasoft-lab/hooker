@@ -4,7 +4,7 @@
         <router-link :to="{name: 'add-action'}" class="btn btn-primary">Add Action</router-link>
     </div>
   <div class="card-header"><h3>Actions</h3></div>
-  <div class="card-body">An Action is a enforceable step that enables the Postee operator to act upon incoming events.</div>
+  <div class="card-body">An Action is a enforceable step that enables the Hooker operator to act upon incoming events.</div>
     <div class="row row-cols-1 row-cols-md-3">
         <ActionCard v-for="(action, index) in actions"
             :key="index"

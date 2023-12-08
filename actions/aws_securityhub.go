@@ -7,8 +7,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/aquasecurity/postee/v2/formatting"
-	"github.com/aquasecurity/postee/v2/layout"
+	"github.com/khulnasoft-lab/hooker/v2/formatting"
+	"github.com/khulnasoft-lab/hooker/v2/layout"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/securityhub"
@@ -103,7 +103,7 @@ func (sh AWSSecurityHubClient) Send(m map[string]string) error {
 	}
 
 	if len(r.Findings) <= 0 {
-		return fmt.Errorf("trivy AWS sent no findings to Postee, skipping sending")
+		return fmt.Errorf("tunnel AWS sent no findings to Hooker, skipping sending")
 	}
 
 	var awsfindings []types.AwsSecurityFinding

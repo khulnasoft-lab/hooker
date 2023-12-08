@@ -75,7 +75,7 @@
                     <option value="jira">Jira</option>
                   </select>
                   <small id="aHelp" class="form-text text-muted"
-                    >Use Postee v1 renderers</small
+                    >Use Hooker v1 renderers</small
                   >
                 </div>
               </b-tab>

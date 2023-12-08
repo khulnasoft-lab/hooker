@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"strconv"
 
-	"github.com/aquasecurity/postee/v2/data"
+	"github.com/khulnasoft-lab/hooker/v2/data"
 )
 
 func GenTestDescription(provider LayoutProvider, raw string) string {
@@ -72,7 +72,7 @@ func GenTicketDescription(provider LayoutProvider, scanInfo, prevScan *data.Scan
 		builder.WriteString(provider.TitleH2("Sensitive Data"))
 		RenderSensitiveData(scanInfo.SensitiveData, provider, &builder)
 	}
-	// Checked that the aqua-server name is not empty
+	// Checked that the khulnasoft-server name is not empty
 	if len(serverUrl) > 0 && len(image_url_part) > 0 {
 		builder.WriteString(provider.P("See more: " + provider.A(serverUrl+image_url_part, serverUrl+image_url_part)))
 	}

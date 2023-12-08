@@ -3,7 +3,7 @@ package layout
 import (
 	"strconv"
 
-	"github.com/aquasecurity/postee/v2/data"
+	"github.com/khulnasoft-lab/hooker/v2/data"
 )
 
 func RenderAssurances(provider LayoutProvider, assuranceResults data.ImageAssuranceResults) string {

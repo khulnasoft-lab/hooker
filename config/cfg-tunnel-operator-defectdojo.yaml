@@ -1,0 +1,34 @@
+# The configuration file contains a general settings section,
+# routes, templates and actions sections.
+
+name: tenant            #  The tenant name
+khulnasoft-server:            #  URL of Khulnasoft Server for links. E.g. https://myserver.khulnasoft.com
+max-db-size: 1000MB       #  Max size of DB. <numbers><unit suffix> pattern is used, such as "300MB" or "1GB". If empty or 0 then unlimited
+db-verify-interval: 1   #  How often to check the DB size. By default, Hooker checks every 1 hour
+
+# Routes are used to define how to handle an incoming message
+routes:
+- name: tunnelScans
+  actions: [ exec-curl-dd ]
+  template: plejd-dd-tunnel-report
+  input: contains(input.kind, "ClusterRbacAssessmentReport")
+
+# Actions are target services that should consume the messages
+actions:
+- name: stdout
+  type: stdout
+  enable: false
+
+- name: exec-curl-dd           # use curl to send message to defectdojo
+  type: exec
+  enable: true
+  env:
+    - "DEFECTDOJO_URL=http://webserver-http-echo:8888"
+  input-file: /tmp/exec-curl-dd.sh       # action expects shell script (plain sh shell)
+
+templates:
+- name: raw-json                        # route message "As Is" to external webhook
+  rego-package: hooker.rawmessage.json
+
+- name: plejd-dd-tunnel-report           # render from report into DD structure
+  rego-package: plejd.tunneloperator.defectdojo

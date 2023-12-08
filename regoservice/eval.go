@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/aquasecurity/postee/v2/data"
+	"github.com/khulnasoft-lab/hooker/v2/data"
 	"github.com/open-policy-agent/opa/rego"
 	"io/fs"
 	"log"

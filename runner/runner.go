@@ -6,12 +6,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/aquasecurity/postee/v2/router"
+	"github.com/khulnasoft-lab/hooker/v2/router"
 	"github.com/nats-io/nats.go"
 )
 
 const (
-	NATSConfigSubject = "postee.config"
+	NATSConfigSubject = "hooker.config"
 )
 
 type Runner struct {

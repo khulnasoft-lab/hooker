@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/aquasecurity/postee/v2/actions"
+	"github.com/khulnasoft-lab/hooker/v2/actions"
 )
 
 func buildStdoutAction(sourceSettings *ActionSettings) *actions.StdoutAction {
@@ -32,10 +32,10 @@ func buildWebhookAction(sourceSettings *ActionSettings) *actions.WebhookAction {
 	}
 }
 
-func buildTeamsAction(sourceSettings *ActionSettings, aquaServer string) *actions.TeamsAction {
+func buildTeamsAction(sourceSettings *ActionSettings, khulnasoftServer string) *actions.TeamsAction {
 	return &actions.TeamsAction{
 		Name:       sourceSettings.Name,
-		AquaServer: aquaServer,
+		KhulnasoftServer: khulnasoftServer,
 		Webhook:    sourceSettings.Url,
 	}
 }
@@ -54,10 +54,10 @@ func buildServiceNow(sourceSettings *ActionSettings) *actions.ServiceNowAction {
 	return serviceNow
 }
 
-func buildSlackAction(sourceSettings *ActionSettings, aqua string) *actions.SlackAction {
+func buildSlackAction(sourceSettings *ActionSettings, khulnasoft string) *actions.SlackAction {
 	return &actions.SlackAction{
 		Name:       sourceSettings.Name,
-		AquaServer: aqua,
+		KhulnasoftServer: khulnasoft,
 		Url:        sourceSettings.Url,
 	}
 }

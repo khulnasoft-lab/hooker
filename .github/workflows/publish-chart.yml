@@ -13,8 +13,8 @@ on:
   workflow_dispatch: # manually it will get the latest tag to publish the helm chart
 env:
   HELM_REP: helm-charts
-  GH_OWNER: aquasecurity
-  CHART_DIR: deploy/helm/postee
+  GH_OWNER: khulnasoft-lab
+  CHART_DIR: deploy/helm/hooker
   GO_VERSION: "1.18"
   KIND_VERSION: "v0.12.0"
   KIND_IMAGE: "kindest/node:v1.23.4@sha256:0e34f0d0fd448aa2f2819cfd74e99fe5793a6e4938b328f657c8e3f81ee0dfb9"
@@ -75,5 +75,5 @@ jobs:
           destination_repo: '${{ env.GH_OWNER }}/${{ env.HELM_REP }}'
           destination_folder: '.'
           destination_branch: 'gh-pages'
-          user_email: aqua-bot@users.noreply.github.com
-          user_name: 'aqua-bot'
+          user_email: khulnasoft-bot@users.noreply.github.com
+          user_name: 'khulnasoft-bot'

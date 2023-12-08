@@ -3,9 +3,9 @@ package actions
 import (
 	"testing"
 
-	"github.com/aquasecurity/postee/v2/layout"
+	"github.com/khulnasoft-lab/hooker/v2/layout"
 
-	"github.com/aquasecurity/postee/v2/formatting"
+	"github.com/khulnasoft-lab/hooker/v2/formatting"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -34,11 +34,11 @@ func Test_buildShortMessage(t *testing.T) {
 `,
 		},
 		{
-			name:      "no configured aqua server",
+			name:      "no configured khulnasoft server",
 			inputUrls: "foo1.com",
 			provider:  new(formatting.HtmlProvider),
-			want: `<p>Please configure Aqua server url to get link to entire scan results.</p>
-<p><a href='https://aquasecurity.github.io/postee/settings/'>Postee settings</a></p>
+			want: `<p>Please configure Khulnasoft server url to get link to entire scan results.</p>
+<p><a href='https://khulnasoft-lab.github.io/hooker/settings/'>Hooker settings</a></p>
 `,
 		},
 		{

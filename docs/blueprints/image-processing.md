@@ -1,7 +1,7 @@
-# Doing Serverless Image Recognition using Postee Actions and AWS
+# Doing Serverless Image Recognition using Hooker Actions and AWS
 
 ## Introduction
-In this walkthrough, we will setup Postee Actions by re-using existing AWS Lambda Functions. This will allow anyone to configure and re-use existing AWS Lambda functionality as a Postee Action.
+In this walkthrough, we will setup Hooker Actions by re-using existing AWS Lambda Functions. This will allow anyone to configure and re-use existing AWS Lambda functionality as a Hooker Action.
 
 ## Scenario
 A user wants to be able to setup image processing of captured images in order to be able to identify any suspicious activity captured by the security (CCTV) camera.
@@ -13,7 +13,7 @@ Upon successful identification, the user should be informed of such an event.
 ## Sample Configs
 In this case a sample configuration for the components can be described as follows:
 
-### Postee Config
+### Hooker Config
 ```yaml
 routes:
 - name: actions-route
@@ -38,7 +38,7 @@ actions:
 ### AWS Rekognition & Lambda Config
 The full source code is omitted here for brevity but this example was inspired by: https://docs.aws.amazon.com/code-samples/latest/catalog/python-rekognition-rekognition_video_detection.py.html
 
-In order to setup the Lambda function we will need a handler that can process the incoming event from Postee. The below example demonstrates via Python psuedocode what this Lambda Handler could look like.
+In order to setup the Lambda function we will need a handler that can process the incoming event from Hooker. The below example demonstrates via Python psuedocode what this Lambda Handler could look like.
 ```python
 import boto3
 from rekognition_objects import (

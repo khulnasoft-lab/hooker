@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	apiKeyName = "POSTEE_API_KEY"
+	apiKeyName = "HOOKER_API_KEY"
 )
 
 func getDbPath() string {

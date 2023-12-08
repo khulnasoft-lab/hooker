@@ -2,9 +2,9 @@
 # routes, templates and actions sections.
 
 name: tenant            #  The tenant name
-aqua-server:            #  URL of Aqua Server for links. E.g. https://myserver.aquasec.com
+khulnasoft-server:            #  URL of Khulnasoft Server for links. E.g. https://myserver.khulnasoft.com
 max-db-size: 1000MB       #  Max size of DB. <numbers><unit suffix> pattern is used, such as "300MB" or "1GB". If empty or 0 then unlimited
-db-verify-interval: 1   #  How often to check the DB size. By default, Postee checks every 1 hour
+db-verify-interval: 1   #  How often to check the DB size. By default, Hooker checks every 1 hour
 
 # Routes are used to define how to handle an incoming message
 routes:
@@ -33,11 +33,11 @@ routes:
 # Templates are used to format a message
 templates:
 - name: vuls-slack                  #  Out of the box template for slack
-  rego-package:  postee.vuls.slack      #  Slack template REGO package (available out of the box)
+  rego-package:  hooker.vuls.slack      #  Slack template REGO package (available out of the box)
 - name: vuls-html                       #  Out of the box HTML template
-  rego-package:  postee.vuls.html       #  HTML template REGO package (available out of the box)
+  rego-package:  hooker.vuls.html       #  HTML template REGO package (available out of the box)
 - name: raw-html                        #  Raw message json
-  rego-package:  postee.rawmessage.html #  HTML template REGO package (available out of the box)
+  rego-package:  hooker.rawmessage.html #  HTML template REGO package (available out of the box)
 - name: legacy                          #  Out of the box legacy Golang template
   legacy-scan-renderer: html
 - name: legacy-slack                    #  Legacy slack template implemented in Golang
@@ -47,17 +47,17 @@ templates:
 - name: custom-email                    #  Example of how to use a template from a Web URL
   url:                                  #  URL to custom REGO file
 - name: raw-json                        # route message "As Is" to external webhook
-  rego-package: postee.rawmessage.json
+  rego-package: hooker.rawmessage.json
 - name: vuls-cyclonedx                  # export vulnerabilities to CycloneDX XML
-  rego-package: postee.vuls.cyclondx
-- name: trivy-operator-jira
-  rego-package: postee.trivyoperator.jira
-- name: trivy-operator-slack
-  rego-package: postee.trivyoperator.slack
-- name: trivy-operator-dependencytrack
-  rego-package: postee.trivyoperator.dependencytrack
-- name: trivy-jira
-  rego-package: postee.trivy.jira
+  rego-package: hooker.vuls.cyclondx
+- name: tunnel-operator-jira
+  rego-package: hooker.tunneloperator.jira
+- name: tunnel-operator-slack
+  rego-package: hooker.tunneloperator.slack
+- name: tunnel-operator-dependencytrack
+  rego-package: hooker.tunneloperator.dependencytrack
+- name: tunnel-jira
+  rego-package: hooker.tunnel.jira
 
 # Rules are predefined rego policies that can be used to trigger routes
 rules:

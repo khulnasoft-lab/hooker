@@ -10,9 +10,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/aquasecurity/postee/v2/dbservice"
-	"github.com/aquasecurity/postee/v2/router"
-	"github.com/aquasecurity/postee/v2/utils"
+	"github.com/khulnasoft-lab/hooker/v2/dbservice"
+	"github.com/khulnasoft-lab/hooker/v2/router"
+	"github.com/khulnasoft-lab/hooker/v2/utils"
 	"github.com/gorilla/mux"
 )
 
@@ -66,12 +66,12 @@ func (ctx *WebServer) Start(host, tlshost string) {
 		}
 	}
 
-	if os.Getenv("AQUAALERT_CERT_PEM") != "" {
-		certPem = os.Getenv("AQUAALERT_CERT_PEM")
+	if os.Getenv("KHULNASOFTALERT_CERT_PEM") != "" {
+		certPem = os.Getenv("KHULNASOFTALERT_CERT_PEM")
 	}
 
-	if os.Getenv("AQUAALERT_KEY_PEM") != "" {
-		keyPem = os.Getenv("AQUAALERT_KEY_PEM")
+	if os.Getenv("KHULNASOFTALERT_KEY_PEM") != "" {
+		keyPem = os.Getenv("KHULNASOFTALERT_KEY_PEM")
 	}
 	err := dbservice.EnsureApiKey()
 	if err != nil {
@@ -122,7 +122,7 @@ func (ctx *WebServer) scanHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ctx *WebServer) pingHandler(w http.ResponseWriter, r *http.Request) {
-	ctx.writeResponse(w, http.StatusOK, "Postee alive!")
+	ctx.writeResponse(w, http.StatusOK, "Hooker alive!")
 }
 
 func (ctx *WebServer) writeResponse(w http.ResponseWriter, httpStatus int, v interface{}) {
