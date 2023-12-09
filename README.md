@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="./docs/img/hooker.png">
-</p>
-
 ![Docker Pulls][docker-pull]
 [![Go Report Card][report-card-img]][report-card]
 ![](https://github.com/khulnasoft-lab/hooker/workflows/Go/badge.svg)
@@ -25,9 +21,6 @@
 Hooker is a simple message routing application that receives input messages through a webhook interface, and can take enforce actions using predefined outputs via integrations.
 
 Watch a quick demo of how you can use Hooker:
-
-
-[![Hooker Demo Video](./docs/img/hooker-video-thumbnail.jpg)](https://www.youtube.com/watch?v=HZ5Z8jAVH8w)
 
 Primary use of Hooker is to act as a message relay and notification service that integrates with a variety of third-party services. Hooker can also be used for sending vulnerability scan results or audit alerts from Khulnasoft Platform to collaboration systems.
 
