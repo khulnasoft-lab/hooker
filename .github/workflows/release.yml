@@ -31,22 +31,6 @@ jobs:
       - name: Run Integration Tests
         run: make test-integration
 
-      - name: Run Tunnel vulnerability scanner in repo mode
-        uses: aquasecurity/trivy-action@0.16.0
-        with:
-          scan-type: 'fs'
-          ignore-unfixed: true
-          format: 'sarif'
-          severity: 'CRITICAL'
-          exit-code: 0
-
-      - name: Run Tunnel vulnerability scanner against Khulnasoft Cloud
-        uses: aquasecurity/trivy-action@0.16.0
-        with:
-          scan-type: 'fs'
-          hide-progress: true
-          format: 'table'
-          security-checks: 'vuln,config'
 
   release:
     name: Release
