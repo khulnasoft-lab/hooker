@@ -5,7 +5,7 @@ WORKDIR /server/
 ARG TARGETOS TARGETARCH
 RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build --ldflags "-s -w" -o ./bin/hooker main.go
 
-FROM alpine:3.19.0
+FROM alpine:3.19.1
 RUN apk update && apk add wget ca-certificates curl jq
 EXPOSE 8082
 EXPOSE 8445
